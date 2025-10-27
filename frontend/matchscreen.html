@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <title>Match Details</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    table { border-collapse: collapse; margin-top: 20px; width: 100%; }
+    th, td { border: 1px solid #ccc; padding: 5px 10px; text-align: center; }
+    button { margin: 2px; }
+    .selected { background-color: #4caf50; color: white; }
+    #currentScore { font-weight: bold; margin-bottom: 10px; }
+    #currentHole { font-weight: bold; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Match Details</h1>
+  <h2>Match ID: <span id="matchIdDisplay"></span></h2>
+  <div id="currentScore">Huidige score: <span id="scoreDisplay">0 - 0</span></div>
+  <div id="currentHole">Huidige hole: <span id="holeDisplay">1</span></div>
+
+  <table id="holesTable">
+    <thead>
+      <tr>
+        <th>Hole</th>
+        <th>Winnaar</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    const apiUrl = "http://localhost:5050";
+    const holesTableBody = document.querySelector("#holesTable tbody");
+    const matchIdDisplay = document.getElementById("matchIdDisplay");
+    const scoreDisplay = document.getElementById("scoreDisplay");
+    const holeDisplay = document.getElementById("holeDisplay");
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const matchId = urlParams.get("matchId");
+    matchIdDisplay.textContent = matchId;
+
+    let holesData = [];
+
+    function updateScoreDisplay() {
+      let score1 = 0;
+      let score2 = 0;
+      holesData.forEach(h => {
+        if (h.winner === 1) score1++;
+        if (h.winner === 2) score2++;
+      });
+      scoreDisplay.textContent = `${score1} - ${score2}`;
+    }
+
+    function updateCurrentHole() {
+    // Huidige hole = eerste hole die nog niet gespeeld is (winner === null)
+    const nextHole = holesData.find(h => h.winner === null);
+    holeDisplay.textContent = nextHole ? nextHole.hole_number : "Einde match";
+    }
+
+    async function loadHoles() {
+      const res = await fetch(`${apiUrl}/matches/${matchId}/score`);
+      holesData = await res.json();
+
+      holesTableBody.innerHTML = "";
+      holesData.forEach(h => {
+        const row = document.createElement("tr");
+        const holeCell = document.createElement("td");
+        holeCell.textContent = h.hole_number;
+
+        const winnerCell = document.createElement("td");
+
+        const btn1 = document.createElement("button");
+        btn1.textContent = "Speler 1";
+        btn1.classList.toggle("selected", h.winner === 1);
+        btn1.onclick = () => updateHole(h.hole_number, 1);
+
+        const btn2 = document.createElement("button");
+        btn2.textContent = "Speler 2";
+        btn2.classList.toggle("selected", h.winner === 2);
+        btn2.onclick = () => updateHole(h.hole_number, 2);
+
+        const btn0 = document.createElement("button");
+        btn0.textContent = "Gelijk";
+        btn0.classList.toggle("selected", h.winner === 0);
+        btn0.onclick = () => updateHole(h.hole_number, 0);
+
+        winnerCell.appendChild(btn1);
+        winnerCell.appendChild(btn2);
+        winnerCell.appendChild(btn0);
+
+        row.appendChild(holeCell);
+        row.appendChild(winnerCell);
+        holesTableBody.appendChild(row);
+      });
+
+      updateScoreDisplay();
+      updateCurrentHole();
+    }
+
+    async function updateHole(holeNumber, winner) {
+      await fetch(`${apiUrl}/matches/${matchId}/holes/${holeNumber}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ winner }),
+      });
+      loadHoles();
+    }
+
+    loadHoles();
+  </script>
+</body>
+</html>
