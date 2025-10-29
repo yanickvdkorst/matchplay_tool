@@ -1,4 +1,4 @@
-    const apiUrl = "http://localhost:5050";
+    const apiUrl = "https://matchplay-platform.onrender.com/";
     const matchesBody = document.getElementById("matchesBody");
     const addMatchBtn = document.getElementById("addMatchBtn");
     const newPlayer1Input = document.getElementById("newPlayer1");
