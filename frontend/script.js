@@ -139,4 +139,4 @@ function calculateUpScore(holes) {
     };
 
     loadDashboard();
-    // setInterval(loadDashboard, 3000); // elke 3 seconden live update
+    setInterval(loadDashboard, 5000); // elke 3 seconden live update

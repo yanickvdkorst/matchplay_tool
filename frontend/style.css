@@ -241,7 +241,7 @@ a {
   #scoreCard.mobile     {display: none;}
 .button-continer        {display: flex; justify-content: center;}
 
-@media (max-width: 700px) {
+@media (max-width: 1000px) {
     body                        {padding: 0; height: 100vh;}
   .score-form                   {height: 100vh; overflow: hidden;}
   .winner-buttons              {flex-direction: column; height: 100%; }
