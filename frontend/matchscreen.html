@@ -3,21 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <title>Match Details</title>
-  <style>
-    body { font-family: sans-serif; padding: 20px; }
-    table { border-collapse: collapse; margin-top: 20px; width: 100%; }
-    th, td { border: 1px solid #ccc; padding: 5px 10px; text-align: center; }
-    button { margin: 2px; }
-    .selected { background-color: #4caf50; color: white; }
-    #currentScore { font-weight: bold; margin-bottom: 10px; }
-    #currentHole { font-weight: bold; margin-bottom: 10px; }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Match Details</h1>
-  <h2>Match ID: <span id="matchIdDisplay"></span></h2>
-  <div id="currentScore">Huidige score: <span id="scoreDisplay">0 - 0</span></div>
-  <div id="currentHole">Huidige hole: <span id="holeDisplay">1</span></div>
+    <div class="content">
+        <div class="top-content">
+            <a href="./index.html">Terug</a>
+            <button id="deleteMatchBtn" style="margin-left: 1rem; background:red; color:white; padding:0.5rem 1rem; border:none; border-radius:0.5rem; cursor:pointer;">Verwijder Match</button>
+            <h1>Match ID: <span id="matchIdDisplay"></span></h1>
+        </div>
+        <div class="bottom-content">
+            <h2 id="player1Name">Speler 1</h2>
+            <h2>vs</h2>
+            <h2 id="player2Name">Speler 2</h2>
+        </div>
+    </div>
 
   <table id="holesTable">
     <thead>
@@ -33,12 +33,33 @@
     const apiUrl = "http://localhost:5050";
     const holesTableBody = document.querySelector("#holesTable tbody");
     const matchIdDisplay = document.getElementById("matchIdDisplay");
-    const scoreDisplay = document.getElementById("scoreDisplay");
-    const holeDisplay = document.getElementById("holeDisplay");
+    const player1El = document.getElementById("player1Name");
+    const player2El = document.getElementById("player2Name");
 
     const urlParams = new URLSearchParams(window.location.search);
     const matchId = urlParams.get("matchId");
     matchIdDisplay.textContent = matchId;
+      
+
+        let player1Name = "";
+        let player2Name = "";
+
+        fetch(`http://localhost:5050/matches?id=${matchId}`)
+        .then(res => res.json())
+        .then(data => {
+            const match = data.find(m => m.id == matchId);
+            if (match) {
+            player1El.textContent = match.player1_name;
+            player2El.textContent = match.player2_name;
+
+            // opslaan voor later in de buttons
+            player1Name = match.player1_name;
+            player2Name = match.player2_name;
+
+             loadHoles();
+            }
+        });
+
 
     let holesData = [];
 
@@ -49,14 +70,29 @@
         if (h.winner === 1) score1++;
         if (h.winner === 2) score2++;
       });
-      scoreDisplay.textContent = `${score1} - ${score2}`;
     }
 
-    function updateCurrentHole() {
-    // Huidige hole = eerste hole die nog niet gespeeld is (winner === null)
-    const nextHole = holesData.find(h => h.winner === null);
-    holeDisplay.textContent = nextHole ? nextHole.hole_number : "Einde match";
-    }
+    const deleteMatchBtn = document.getElementById("deleteMatchBtn");
+
+    deleteMatchBtn.addEventListener("click", async () => {
+        const confirmDelete = confirm("Weet je zeker dat je deze match wilt verwijderen?");
+        if (!confirmDelete) return;
+
+        try {
+            const res = await fetch(`${apiUrl}/matches/${matchId}`, {
+                method: "DELETE"
+            });
+            if (res.ok) {
+                alert("Match verwijderd!");
+                window.location.href = "./index.html"; // terug naar overzicht
+            } else {
+                alert("Fout bij verwijderen!");
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Er is iets misgegaan.");
+        }
+    });
 
     async function loadHoles() {
       const res = await fetch(`${apiUrl}/matches/${matchId}/score`);
@@ -71,23 +107,23 @@
         const winnerCell = document.createElement("td");
 
         const btn1 = document.createElement("button");
-        btn1.textContent = "Speler 1";
-        btn1.classList.toggle("selected", h.winner === 1);
+        btn1.textContent = player1Name; // hier de echte naam
+        btn1.classList.toggle("red", h.winner === 1);
         btn1.onclick = () => updateHole(h.hole_number, 1);
 
         const btn2 = document.createElement("button");
-        btn2.textContent = "Speler 2";
-        btn2.classList.toggle("selected", h.winner === 2);
+        btn2.textContent = player2Name; // hier de echte naam
+        btn2.classList.toggle("blue", h.winner === 2);
         btn2.onclick = () => updateHole(h.hole_number, 2);
 
         const btn0 = document.createElement("button");
         btn0.textContent = "Gelijk";
-        btn0.classList.toggle("selected", h.winner === 0);
+        btn0.classList.toggle("gray", h.winner === 0);
         btn0.onclick = () => updateHole(h.hole_number, 0);
 
         winnerCell.appendChild(btn1);
-        winnerCell.appendChild(btn2);
         winnerCell.appendChild(btn0);
+        winnerCell.appendChild(btn2);
 
         row.appendChild(holeCell);
         row.appendChild(winnerCell);
@@ -95,7 +131,6 @@
       });
 
       updateScoreDisplay();
-      updateCurrentHole();
     }
 
     async function updateHole(holeNumber, winner) {
@@ -106,8 +141,6 @@
       });
       loadHoles();
     }
-
-    loadHoles();
   </script>
 </body>
 </html>

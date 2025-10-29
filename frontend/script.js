@@ -1,123 +1,127 @@
-const apiUrl = "http://localhost:5050";
+    const apiUrl = "http://localhost:5050";
+    const matchesBody = document.getElementById("matchesBody");
+    const addMatchBtn = document.getElementById("addMatchBtn");
+    const newPlayer1Input = document.getElementById("newPlayer1");
+    const newPlayer2Input = document.getElementById("newPlayer2");
+    const modals = document.querySelectorAll(".modal");
+    const openModalBtns = document.querySelectorAll(".openModal"); // let op hoofdletter
 
-const player1Input = document.getElementById("player1");
-const player2Input = document.getElementById("player2");
-const startMatchBtn = document.getElementById("startMatch");
-
-const matchSelect = document.getElementById("matchSelect");
-const matchSection = document.getElementById("matchSection");
-const matchIdDisplay = document.getElementById("matchIdDisplay");
-const holesTableBody = document.querySelector("#holesTable tbody");
-
-let currentMatchId = null;
-
-// Player aanmaken
-async function createPlayer(name) {
-  const res = await fetch(`${apiUrl}/players`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name }),
-  });
-  return res.json();
-}
-
-// Nieuwe match starten
-async function startMatch(player1Name, player2Name) {
-  const p1 = await createPlayer(player1Name);
-  const p2 = await createPlayer(player2Name);
-
-  const res = await fetch(`${apiUrl}/matches`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ player1_id: p1.id, player2_id: p2.id }),
-  });
-  const match = await res.json();
-  return match.match_id;
-}
-
-// Holes laden
-async function loadHoles(matchId) {
-  const res = await fetch(`${apiUrl}/matches/${matchId}/score`);
-  const holes = await res.json();
-  holesTableBody.innerHTML = "";
-  holes.forEach(h => {
-    const row = document.createElement("tr");
-    const holeCell = document.createElement("td");
-    holeCell.textContent = h.hole_number;
-
-    const winnerCell = document.createElement("td");
-    const btn1 = document.createElement("button");
-    btn1.textContent = "Speler 1";
-    btn1.onclick = () => updateHole(matchId, h.hole_number, 1);
-
-    const btn2 = document.createElement("button");
-    btn2.textContent = "Speler 2";
-    btn2.onclick = () => updateHole(matchId, h.hole_number, 2);
-
-    const btn0 = document.createElement("button");
-    btn0.textContent = "Gelijk";
-    btn0.onclick = () => updateHole(matchId, h.hole_number, 0);
-
-    winnerCell.appendChild(btn1);
-    winnerCell.appendChild(btn2);
-    winnerCell.appendChild(btn0);
-
-    row.appendChild(holeCell);
-    row.appendChild(winnerCell);
-    holesTableBody.appendChild(row);
-  });
-}
-
-// Hole bijwerken
-async function updateHole(matchId, holeNumber, winner) {
-  await fetch(`${apiUrl}/matches/${matchId}/holes/${holeNumber}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ winner }),
-  });
-  loadHoles(matchId);
-}
-
-// Alle matches ophalen
-async function loadMatches() {
-  const res = await fetch(`${apiUrl}/matches`);
-  const matches = await res.json();
-  matchSelect.innerHTML = '<option value="">Selecteer een match</option>';
-  matches.forEach(m => {
-    const option = document.createElement("option");
-    option.value = m.id;
-    option.textContent = `Match ${m.id}: ${m.player1_name} vs ${m.player2_name}`;
-    matchSelect.appendChild(option);
-  });
-}
-
-// Nieuwe match starten en lijst updaten
-startMatchBtn.onclick = async () => {
-  const p1 = player1Input.value.trim();
-  const p2 = player2Input.value.trim();
-  if (!p1 || !p2) return alert("Vul beide spelers in");
-
-  const matchId = await startMatch(p1, p2);
-  await loadMatches(); // update dropdown
-  matchSelect.value = matchId;
-  currentMatchId = matchId;
-  matchIdDisplay.textContent = currentMatchId;
-  matchSection.style.display = "block";
-  loadHoles(currentMatchId);
-};
-
-// Event listener match selectie
-matchSelect.addEventListener("change", () => {
-  const matchId = matchSelect.value;
-  if (matchId) {
-    currentMatchId = matchId;
-    matchIdDisplay.textContent = matchId;
-    matchSection.style.display = "block";
-    loadHoles(matchId);
-  } else {
-    matchSection.style.display = "none";
-  }
+    openModalBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+        modals.forEach(modal => modal.classList.add('open'));
+    });
+    });
+    modals.forEach(modal => {
+    modal.addEventListener("click", (e) => {
+        // check of je klikt op de modal zelf, niet de inhoud
+        if (e.target === modal) {
+            modal.classList.remove('open');
+        }
+    });
 });
+    
 
-// Initial load
-loadMatches();
+    // Berekening van live UP-score
+    function calculateUpScore(holes) {
+      let score1 = 0;
+      let score2 = 0;
+
+     holes.forEach(h => {
+        if (h.winner === 1) score1++;
+        if (h.winner === 2) score2++;
+        // winner === 0 --> gelijkspel, niet tellen
+        });
+
+      const diff = score1 - score2;
+      if (diff > 0) return { player1Up: `${diff}UP`, player2Up: "" };
+      if (diff < 0) return { player1Up: "", player2Up: `${-diff}UP` };
+      return { player1Up: "", player2Up: "" };
+    }
+
+   function getCurrentHole(holes) {
+  const nextHole = holes.find(h => h.winner === null); // nog niet gespeeld
+  return nextHole ? nextHole.hole_number : "F";
+}
+
+    async function loadDashboard() {
+      const res = await fetch(`${apiUrl}/matches`);
+      const matches = await res.json();
+      matchesBody.innerHTML = "";
+
+        for (let m of matches) {
+        const holesRes = await fetch(`${apiUrl}/matches/${m.id}/score`);
+        const holes = await holesRes.json();
+
+        const upScore = calculateUpScore(holes);
+        const currentHole = getCurrentHole(holes);
+
+        // standaard classes
+        let player1Class = "";
+        let player2Class = "";
+        let score1Class = "";
+        let score2Class = "";
+
+        // kleur bepalen
+        if (upScore.player1Up) {
+            player1Class = "red";
+            score1Class = "red";
+        } else if (upScore.player2Up) {
+            player2Class = "blue";
+            score2Class = "blue";
+        }
+
+       const row = document.createElement("tr");
+
+        // Voeg eventueel de classes toe zoals rood/blauw voor de score en speler
+        row.innerHTML = `
+            <td class="${score1Class} score">${upScore.player1Up}</td>
+            <td class="${player1Class}">${m.player1_name}</td>
+            <td class="currentHole">${currentHole}</td>
+            <td class="${player2Class}">${m.player2_name}</td>
+            <td class="${score2Class} score">${upScore.player2Up}</td>
+        `;
+
+        // Hele rij klikbaar maken
+        row.style.cursor = "pointer"; // laat zien dat het klikbaar is
+        row.onclick = () => {
+            window.location.href = `matchscreen.html?matchId=${m.id}`;
+        };
+
+        matchesBody.appendChild(row);
+        }
+    }
+
+    // Nieuwe match toevoegen
+    addMatchBtn.onclick = async () => {
+      const p1Name = newPlayer1Input.value.trim();
+      const p2Name = newPlayer2Input.value.trim();
+      if (!p1Name || !p2Name) return alert("Vul beide spelers in");
+
+      // Spelers aanmaken
+      const p1 = await fetch(`${apiUrl}/players`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: p1Name }),
+      }).then(r => r.json());
+
+      const p2 = await fetch(`${apiUrl}/players`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: p2Name }),
+      }).then(r => r.json());
+
+      // Match aanmaken
+      await fetch(`${apiUrl}/matches`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ player1_id: p1.id, player2_id: p2.id }),
+      });
+    modals.forEach(modal => modal.classList.remove('open'));
+      // Velden leegmaken en dashboard refreshen
+      newPlayer1Input.value = "";
+      newPlayer2Input.value = "";
+      loadDashboard();
+    };
+
+    loadDashboard();
+    // setInterval(loadDashboard, 3000); // elke 3 seconden live update

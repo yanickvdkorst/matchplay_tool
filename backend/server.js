@@ -30,6 +30,23 @@ app.post("/players", async (req, res) => {
     res.status(500).json({ error: "Speler toevoegen mislukt" });
   }
 });
+// ROUTE: match verwijderen
+app.delete("/matches/:matchId", async (req, res) => {
+  const { matchId } = req.params;
+
+  try {
+    // Eerst alle holes van de match verwijderen
+    await pool.query("DELETE FROM holes WHERE match_id = $1", [matchId]);
+
+    // Daarna de match zelf verwijderen
+    await pool.query("DELETE FROM matches WHERE id = $1", [matchId]);
+
+    res.json({ message: "Match succesvol verwijderd" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Match verwijderen mislukt" });
+  }
+});
 
 // ROUTE: nieuwe match starten
 app.post("/matches", async (req, res) => {
