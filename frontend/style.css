@@ -180,9 +180,9 @@ a {
 .winner-buttons #drawBtn.currentWinner    { background-color: #555555; border: white solid 2px; }
 .winner-buttons #player2Btn.currentWinner { background-color: #030a3f; border: white solid 2px;}
 
-.score-form .hole-select                               {position: absolute; top: 1rem; left: 50%; transform: translateX(-50%); z-index: 100;}
+.score-form .hole-select                               {position: absolute; top: 2.5rem; left: 50%; transform: translateX(-50%); z-index: 100;}
 
-#holeDropdown { -webkit-appearance: none; -moz-appearance: none; appearance: none;  padding: 0.5rem 1rem; border-radius: 0.5rem; background-color: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px) saturate(180%); -webkit-backdrop-filter: blur(10px) saturate(180%); border: 1px solid rgba(255, 255, 255, 0.3); font-size: 4rem; font-weight: 700; color: white; cursor: pointer; }
+#holeDropdown { -webkit-appearance: none; -moz-appearance: none; appearance: none;  padding: .5rem 1rem; border-radius: 0.5rem; background-color: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px) saturate(180%); -webkit-backdrop-filter: blur(10px) saturate(180%); border: 1px solid rgba(255, 255, 255, 0.3); font-size: 4rem; font-weight: 700; color: white; cursor: pointer; }
 
 /* Optioneel: pijltje zelf maken */
 #holeDropdown {
@@ -244,17 +244,17 @@ a {
 .button-continer        {display: flex; justify-content: center;}
 
 @media (max-width: 1000px) {
-    body                        {padding: 0; height: 100vh;}
-  .score-form                   {height: 100vh; overflow: hidden;}
+    body                        {padding: 0; height: 100dvh;}
+  .score-form                   {height: 100dvh; overflow: hidden;}
   .winner-buttons              {flex-direction: column; height: 100%; }
   .winner-buttons button              {aspect-ratio: unset; border: none !important;}
   .winner-buttons #drawBtn      {width: 30dvw;}
   .winner-buttons #player2Btn .currentScore  {right: 0; top: 0; left: auto; bottom: auto;}
   .content                      {display: none;}
-  .mobile-button                {display: block; position: absolute; left: 1rem; top: 1rem; background-image: url('./images/chevron-left.svg'); background-repeat: no-repeat; background-size: 3.5rem; background-position: center center; border-radius: 100%; width: 4rem; height: 4rem; padding: .5rem; background-color: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px) saturate(180%); -webkit-backdrop-filter: blur(10px) saturate(180%); border: 1px solid rgba(255, 255, 255, 0.3);}
+  .mobile-button                {display: block; position: absolute; left: 2.5rem; top: 2.5rem; background-image: url('./images/chevron-left.svg'); background-repeat: no-repeat; background-size: 3.5rem; background-position: center center; border-radius: 100%; width: 4rem; height: 4rem; padding: .5rem; background-color: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px) saturate(180%); -webkit-backdrop-filter: blur(10px) saturate(180%); border: 1px solid rgba(255, 255, 255, 0.3);}
   .mobile-button:hover                {background-color: rgba(255, 255, 255, 0.4);}
   .modal-content                        {padding: 5rem !important;}
-  #scoreCard.mobile                           {display: block; position: absolute; right: 1rem; top: 1rem; background-image: url('./images/scorecard.svg'); background-repeat: no-repeat; background-size: 3.5rem; background-position: center center; border-radius: 100%; width: 4rem; height: 4rem; padding: .5rem; background-color: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px) saturate(180%); -webkit-backdrop-filter: blur(10px) saturate(180%); border: 1px solid rgba(255, 255, 255, 0.3); font-size: .85rem;}
+  #scoreCard.mobile                           {display: block; position: absolute; right: 2.5rem; top: 2.5rem; background-image: url('./images/scorecard.svg'); background-repeat: no-repeat; background-size: 3.5rem; background-position: center center; border-radius: 100%; width: 4rem; height: 4rem; padding: .5rem; background-color: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px) saturate(180%); -webkit-backdrop-filter: blur(10px) saturate(180%); border: 1px solid rgba(255, 255, 255, 0.3); font-size: .85rem;}
   #scoreCard.desktop                            {display: none;}
 
 }
