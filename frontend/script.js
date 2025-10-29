@@ -1,4 +1,4 @@
-const apiUrl = window.location.hostname === "localhost" 
+const apiUrl = window.location.hostname === "127.0.0.1" 
   ? "http://localhost:5050" 
   : "https://matchplay-platform.onrender.com";
   
