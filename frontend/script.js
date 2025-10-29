@@ -27,26 +27,35 @@
 });
     
 
-    // Berekening van live UP-score
-    function calculateUpScore(holes) {
-      let score1 = 0;
-      let score2 = 0;
+   // Berekening van live UP-score
+function calculateUpScore(holes) {
+    let score1 = 0;
+    let score2 = 0;
 
-     holes.forEach(h => {
+    holes.forEach(h => {
         if (h.winner === 1) score1++;
         if (h.winner === 2) score2++;
         // winner === 0 --> gelijkspel, niet tellen
-        });
+    });
 
-      const diff = score1 - score2;
-      if (diff > 0) return { player1Up: `${diff}UP`, player2Up: "" };
-      if (diff < 0) return { player1Up: "", player2Up: `${-diff}UP` };
-      return { player1Up: "", player2Up: "" };
-    }
+    const diff = score1 - score2;
+
+    if (diff > 0) return { player1Up: `${diff}UP`, player2Up: "" };
+    if (diff < 0) return { player1Up: "", player2Up: `${-diff}UP` };
+    // bij gelijke stand
+    return { player1Up: "A/S", player2Up: "A/S" };
+}
 
    function getCurrentHole(holes) {
-  const nextHole = holes.find(h => h.winner === null); // nog niet gespeeld
-  return nextHole ? nextHole.hole_number : "F";
+    // zoek de laatste hole die een winnaar heeft
+    const lastPlayed = [...holes].reverse().find(h => h.winner !== null);
+    if (lastPlayed) {
+        // als er nog ruimte is voor de volgende hole → toon dat nummer
+        return lastPlayed.hole_number === 18 ? "F" : lastPlayed.hole_number;
+    } else {
+        // nog geen enkele hole gespeeld
+        return 0;
+    }
 }
 
     async function loadDashboard() {
@@ -67,11 +76,11 @@
         let score1Class = "";
         let score2Class = "";
 
-        // kleur bepalen
-        if (upScore.player1Up) {
+       // kleur bepalen
+        if (upScore.player1Up && upScore.player1Up !== "A/S") {
             player1Class = "red";
             score1Class = "red";
-        } else if (upScore.player2Up) {
+        } else if (upScore.player2Up && upScore.player2Up !== "A/S") {
             player2Class = "blue";
             score2Class = "blue";
         }

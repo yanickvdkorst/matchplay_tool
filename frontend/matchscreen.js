@@ -199,3 +199,53 @@ drawBtn.addEventListener("click", () => handleHoleClick(0));
     displayCurrentWinner();
 }, 400);
 }
+
+// Scorekaart functionaliteit
+const scoreCardButtons = document.querySelectorAll("#scoreCard"); // gebruik class ipv id
+const scoreCardModal = document.getElementById("scoreCardModal");
+const closeScoreCardBtn = document.getElementById("closeScoreCard");
+const scoreCardBody = document.querySelector("#scoreCardTable tbody");
+
+// herhaal voor elke button
+scoreCardButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+        updateScoreCard();
+        scoreCardModal.classList.add("open");
+    });
+});
+
+closeScoreCardBtn.addEventListener("click", () => {
+    scoreCardModal.classList.remove("open");
+});
+
+// vul de scorekaart
+function updateScoreCard() {
+    if (!holesData.length) return;
+    scoreCardBody.innerHTML = "";
+
+    holesData.forEach(h => {
+        const tr = document.createElement("tr");
+        let winnerText = "";
+        let colorClass = "";
+
+        if (h.winner === 1) {
+            winnerText = player1Name;
+            colorClass = "red";
+        } else if (h.winner === 2) {
+            winnerText = player2Name;
+            colorClass = "blue";
+        } else if (h.winner === 0) {
+            winnerText = "Gelijk";
+            colorClass = "gray";
+        } else {
+            winnerText = "-";
+            colorClass = "";
+        }
+
+        tr.innerHTML = `
+            <td class="hole">${h.hole_number}</td>
+            <td class="${colorClass}">${winnerText}</td>
+        `;
+        scoreCardBody.appendChild(tr);
+    });
+}

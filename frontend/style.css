@@ -108,7 +108,7 @@ tbody tr:hover {
 }
 
 .gray {
-  background-color: #EEEEEE;
+  background-color: grey;
 }
 
 /* LINK KNOP */
@@ -159,7 +159,7 @@ a {
 .modal .modal-content .closeModal:hover    { cursor: pointer;}
 
 .home.content                       {position: relative; display: flex; justify-content: center; flex-direction: row; align-items: center; padding: 2.5rem 0;}
-.home.content h1                    {margin: 0; position: relative; margin-left: 10rem;}
+.home.content h1                    {margin: 0; position: relative;}
 .home.content .openModal           { width: 1.5rem; height: 1.5rem; margin-bottom: 0; margin-left: 1rem; background-image: url('./images/plus-icon.svg'); background-repeat: no-repeat; background-position: center center; background-size: 1.75rem;}
 .home.content .openModal:hover           {cursor: pointer;}
 
@@ -195,6 +195,52 @@ a {
 
 .mobile-button          {display: none;}
 
+.modal.scorecard {
+  position: fixed;
+  inset: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.6);
+  z-index: 5000;
+}
+
+.modal.scorecard.open {
+  display: flex;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem 5rem!important;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+    gap: 0 !important;
+}
+.modal-content h2 {margin: 0;}
+
+#scoreCardTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0 0 0;
+}
+
+#scoreCardTable .hole {background-color: #1c3d5a;}
+
+#scoreCardTable th,
+#scoreCardTable td {
+  padding: .5rem;
+  border-bottom: 1px solid #ddd;
+  font-size: 1rem;
+  border: unset;
+}
+
+#closeScoreCard   {  position: absolute; right: 1rem; top: 1rem; width: 1.5rem; height: 1.5rem; background-image: url('./images/close.svg'); background-repeat: no-repeat; background-position: center center; background-size: 1.5rem;}
+#closeScoreCard:hover    { cursor: pointer;}
+  #scoreCard.mobile     {display: none;}
+.button-continer        {display: flex; justify-content: center;}
+
 @media (max-width: 700px) {
     body                        {padding: 0; height: 100vh;}
   .score-form                   {height: 100vh; overflow: hidden;}
@@ -205,6 +251,10 @@ a {
   .content                      {display: none;}
   .mobile-button                {display: block; position: absolute; left: 1rem; top: 1rem; background-image: url('./images/chevron-left.svg'); background-repeat: no-repeat; background-size: 1.5rem; background-position: center center; border-radius: 100%; width: 1.5rem; height: 1.5rem; padding: .5rem; background-color: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px) saturate(180%); -webkit-backdrop-filter: blur(10px) saturate(180%); border: 1px solid rgba(255, 255, 255, 0.3);}
   .mobile-button:hover                {background-color: rgba(255, 255, 255, 0.4);}
+  .modal-content                        {padding: 2.5rem !important;}
+  #scoreCard.mobile                           {display: block; position: absolute; right: 1rem; top: 1rem; background-image: url('./images/scorecard.svg'); background-repeat: no-repeat; background-size: 1.5rem; background-position: center center; border-radius: 100%; width: 1.5rem; height: 1.5rem; padding: .5rem; background-color: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px) saturate(180%); -webkit-backdrop-filter: blur(10px) saturate(180%); border: 1px solid rgba(255, 255, 255, 0.3); font-size: .85rem;}
+  #scoreCard.desktop                            {display: none;}
+
 }
 
 @media (max-width: 375px) {
