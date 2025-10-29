@@ -166,13 +166,13 @@ a {
 
 .score-form                             {position: relative; width: 100%; background-color: blue; box-sizing: border-box; display: flex; flex-direction: column;}
 .winner-buttons                         {width: 100%; display: flex; flex-direction: row; margin-bottom: 0; gap: 0rem; position: relative;}
-.winner-buttons button                  {flex: 1; aspect-ratio: 1 / 1; border-radius: 0; border: transparent solid 2px; font-size: 2rem; position: relative;}
+.winner-buttons button                  {flex: 1; aspect-ratio: 1 / 1; border-radius: 0; border: transparent solid 2px; font-size: 4rem; position: relative;}
 .winner-buttons #player1Btn             {background-color: #DA1212;}
 .winner-buttons #drawBtn                {background-color: grey; width: 20dvw; border-radius: 66%; aspect-ratio: 1 / 1; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000;}
 .winner-buttons #player2Btn             {background-color: #041562;}
 
 .winner-buttons .currentScore             {display: none;}
-.winner-buttons .currentScore.show            {display: block; background-color: rgba(255, 255, 255, 0.2); position: absolute;  padding: .5rem;  color: white; z-index: 100;  margin-bottom: 0; font-size: 1.2rem;}
+.winner-buttons .currentScore.show            {display: block; background-color: rgba(255, 255, 255, 0.2); position: absolute;  padding: .5rem;  color: white; z-index: 100;  margin-bottom: 0; font-size: 4rem;}
 .winner-buttons #player2Btn .currentScore  {left: 0; bottom: 0;}
 .winner-buttons #player1Btn .currentScore  {right: 0; bottom: 0;}
 
@@ -182,7 +182,7 @@ a {
 
 .score-form .hole-select                               {position: absolute; top: 1rem; left: 50%; transform: translateX(-50%); z-index: 100;}
 
-#holeDropdown { -webkit-appearance: none; -moz-appearance: none; appearance: none;  padding: 0.5rem 1rem; border-radius: 0.5rem; background-color: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px) saturate(180%); -webkit-backdrop-filter: blur(10px) saturate(180%); border: 1px solid rgba(255, 255, 255, 0.3); font-size: 1.2rem; font-weight: 700; color: white; cursor: pointer; }
+#holeDropdown { -webkit-appearance: none; -moz-appearance: none; appearance: none;  padding: 0.5rem 1rem; border-radius: 0.5rem; background-color: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px) saturate(180%); -webkit-backdrop-filter: blur(10px) saturate(180%); border: 1px solid rgba(255, 255, 255, 0.3); font-size: 4rem; font-weight: 700; color: white; cursor: pointer; }
 
 /* Optioneel: pijltje zelf maken */
 #holeDropdown {
@@ -218,7 +218,7 @@ a {
   text-align: center;
     gap: 0 !important;
 }
-.modal-content h2 {margin: 0;}
+.modal-content h2 {margin: 0; font-size: 3rem; margin-bottom: 2rem;}
 
 #scoreCardTable {
   width: 100%;
@@ -232,11 +232,13 @@ a {
 #scoreCardTable td {
   padding: .5rem;
   border-bottom: 1px solid #ddd;
-  font-size: 1rem;
+  font-size: 3rem;
   border: unset;
 }
 
-#closeScoreCard   {  position: absolute; right: 1rem; top: 1rem; width: 1.5rem; height: 1.5rem; background-image: url('./images/close.svg'); background-repeat: no-repeat; background-position: center center; background-size: 1.5rem;}
+#scoreCardTable th {font-size: 2rem;}
+
+#closeScoreCard   {  position: absolute; right: 1rem; top: 1rem; width: 4rem; height: 4rem; background-image: url('./images/close.svg'); background-repeat: no-repeat; background-position: center center; background-size: 3.5rem;}
 #closeScoreCard:hover    { cursor: pointer;}
   #scoreCard.mobile     {display: none;}
 .button-continer        {display: flex; justify-content: center;}
@@ -249,10 +251,10 @@ a {
   .winner-buttons #drawBtn      {width: 30dvw;}
   .winner-buttons #player2Btn .currentScore  {right: 0; top: 0; left: auto; bottom: auto;}
   .content                      {display: none;}
-  .mobile-button                {display: block; position: absolute; left: 1rem; top: 1rem; background-image: url('./images/chevron-left.svg'); background-repeat: no-repeat; background-size: 1.5rem; background-position: center center; border-radius: 100%; width: 1.5rem; height: 1.5rem; padding: .5rem; background-color: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px) saturate(180%); -webkit-backdrop-filter: blur(10px) saturate(180%); border: 1px solid rgba(255, 255, 255, 0.3);}
+  .mobile-button                {display: block; position: absolute; left: 1rem; top: 1rem; background-image: url('./images/chevron-left.svg'); background-repeat: no-repeat; background-size: 3.5rem; background-position: center center; border-radius: 100%; width: 4rem; height: 4rem; padding: .5rem; background-color: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px) saturate(180%); -webkit-backdrop-filter: blur(10px) saturate(180%); border: 1px solid rgba(255, 255, 255, 0.3);}
   .mobile-button:hover                {background-color: rgba(255, 255, 255, 0.4);}
-  .modal-content                        {padding: 2.5rem !important;}
-  #scoreCard.mobile                           {display: block; position: absolute; right: 1rem; top: 1rem; background-image: url('./images/scorecard.svg'); background-repeat: no-repeat; background-size: 1.5rem; background-position: center center; border-radius: 100%; width: 1.5rem; height: 1.5rem; padding: .5rem; background-color: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px) saturate(180%); -webkit-backdrop-filter: blur(10px) saturate(180%); border: 1px solid rgba(255, 255, 255, 0.3); font-size: .85rem;}
+  .modal-content                        {padding: 5rem !important;}
+  #scoreCard.mobile                           {display: block; position: absolute; right: 1rem; top: 1rem; background-image: url('./images/scorecard.svg'); background-repeat: no-repeat; background-size: 3.5rem; background-position: center center; border-radius: 100%; width: 4rem; height: 4rem; padding: .5rem; background-color: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px) saturate(180%); -webkit-backdrop-filter: blur(10px) saturate(180%); border: 1px solid rgba(255, 255, 255, 0.3); font-size: .85rem;}
   #scoreCard.desktop                            {display: none;}
 
 }

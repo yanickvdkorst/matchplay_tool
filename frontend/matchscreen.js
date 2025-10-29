@@ -138,7 +138,7 @@ drawBtn.addEventListener("click", () => handleHoleClick(0));
         });
 
         // kleine delay zodat je de klik visueel ziet
-        setTimeout(loadHoles, 200); // 200ms, kan je aanpassen
+        setTimeout(loadHoles, 100); // 200ms, kan je aanpassen
         }
 
  function handleHoleClick(winner) {
@@ -188,7 +188,7 @@ drawBtn.addEventListener("click", () => handleHoleClick(0));
     await updateHole(selectedHoleNumber, winner);
 
     // ververs pas later vanuit backend om kleine latency te maskeren
-    setTimeout(loadHoles, 300);
+    setTimeout(loadHoles, 100);
 
     // bepaal volgende hole lokaal
     const nextHole = holesData.find(h => h.winner === null);
@@ -197,7 +197,7 @@ drawBtn.addEventListener("click", () => handleHoleClick(0));
         holeDropdown.value = selectedHoleNumber;
     }
     displayCurrentWinner();
-}, 400);
+}, 100);
 }
 
 // Scorekaart functionaliteit
