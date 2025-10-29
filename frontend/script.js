@@ -5,6 +5,7 @@
     const newPlayer2Input = document.getElementById("newPlayer2");
     const modals = document.querySelectorAll(".modal");
     const openModalBtns = document.querySelectorAll(".openModal"); // let op hoofdletter
+    const closeModalBtn = document.querySelectorAll(".closeModal");
 
     openModalBtns.forEach(btn => {
     btn.addEventListener("click", () => {
@@ -17,6 +18,11 @@
         if (e.target === modal) {
             modal.classList.remove('open');
         }
+    });
+     closeModalBtn.forEach(btn => {
+    btn.addEventListener("click", () => {
+        modals.forEach(modal => modal.classList.remove('open'));
+    });
     });
 });
     

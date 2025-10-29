@@ -9,7 +9,7 @@
     <div class="content">
         <div class="top-content">
             <a href="./index.html">Terug</a>
-            <button id="deleteMatchBtn" style="margin-left: 1rem; background:red; color:white; padding:0.5rem 1rem; border:none; border-radius:0.5rem; cursor:pointer;">Verwijder Match</button>
+            <button id="deleteMatchBtn">Verwijder wedstrijd</button>
             <h1>Match ID: <span id="matchIdDisplay"></span></h1>
         </div>
         <div class="bottom-content">
@@ -19,19 +19,19 @@
         </div>
     </div>
 
-  <table id="holesTable">
-    <thead>
-      <tr>
-        <th>Hole</th>
-        <th>Winnaar</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+    <div class="score-form">
+        <div class="hole-select">
+          <select id="holeDropdown"></select>
+        </div>
+        <div class="winner-buttons">
+          <button class="currentWinner" id="player1Btn">Speler 1 <div class="currentScore">1UP</div></button>
+          <button class="currentWinner" id="drawBtn">Gelijk</button>
+          <button class="currentWinner" id="player2Btn">Speler 2 <div class="currentScore">1UP</div></button>
+        </div>
+    </div>
 
   <script>
     const apiUrl = "http://localhost:5050";
-    const holesTableBody = document.querySelector("#holesTable tbody");
     const matchIdDisplay = document.getElementById("matchIdDisplay");
     const player1El = document.getElementById("player1Name");
     const player2El = document.getElementById("player2Name");
@@ -39,52 +39,41 @@
     const urlParams = new URLSearchParams(window.location.search);
     const matchId = urlParams.get("matchId");
     matchIdDisplay.textContent = matchId;
-      
 
-        let player1Name = "";
-        let player2Name = "";
+    // globale variabelen
+    let player1Name = "";
+    let player2Name = "";
+    let holesData = [];
+    let selectedHoleNumber = 1;
 
-        fetch(`http://localhost:5050/matches?id=${matchId}`)
-        .then(res => res.json())
-        .then(data => {
-            const match = data.find(m => m.id == matchId);
-            if (match) {
+    // fetch match info
+    fetch(`${apiUrl}/matches?id=${matchId}`)
+      .then(res => res.json())
+      .then(data => {
+          const match = data.find(m => m.id == matchId);
+          if (match) {
             player1El.textContent = match.player1_name;
             player2El.textContent = match.player2_name;
-
-            // opslaan voor later in de buttons
             player1Name = match.player1_name;
             player2Name = match.player2_name;
-
-             loadHoles();
-            }
-        });
-
-
-    let holesData = [];
-
-    function updateScoreDisplay() {
-      let score1 = 0;
-      let score2 = 0;
-      holesData.forEach(h => {
-        if (h.winner === 1) score1++;
-        if (h.winner === 2) score2++;
+                // buttons updaten met echte namen
+            player1Btn.firstChild.textContent = player1Name;
+            player2Btn.firstChild.textContent = player2Name;
+            loadHoles();
+          }
       });
-    }
 
+    // Delete match
     const deleteMatchBtn = document.getElementById("deleteMatchBtn");
-
     deleteMatchBtn.addEventListener("click", async () => {
         const confirmDelete = confirm("Weet je zeker dat je deze match wilt verwijderen?");
         if (!confirmDelete) return;
 
         try {
-            const res = await fetch(`${apiUrl}/matches/${matchId}`, {
-                method: "DELETE"
-            });
+            const res = await fetch(`${apiUrl}/matches/${matchId}`, { method: "DELETE" });
             if (res.ok) {
                 alert("Match verwijderd!");
-                window.location.href = "./index.html"; // terug naar overzicht
+                window.location.href = "./index.html";
             } else {
                 alert("Fout bij verwijderen!");
             }
@@ -94,53 +83,141 @@
         }
     });
 
+    // dropdown en buttons
+    const holeDropdown = document.getElementById("holeDropdown");
+    const player1Btn = document.getElementById("player1Btn");
+    const player2Btn = document.getElementById("player2Btn");
+    const drawBtn = document.getElementById("drawBtn");
+
+    // vul dropdown
+    for (let i = 1; i <= 18; i++) {
+      const option = document.createElement("option");
+      option.value = i;
+      option.textContent = `Hole ${i}`;
+      holeDropdown.appendChild(option);
+    }
+
+    holeDropdown.addEventListener("change", () => {
+      selectedHoleNumber = parseInt(holeDropdown.value);
+      displayCurrentWinner();
+    });
+
+   function displayCurrentWinner() {
+    if (!holesData.length) return;
+    const player1ScoreEl = player1Btn.querySelector(".currentScore");
+    const player2ScoreEl = player2Btn.querySelector(".currentScore");
+
+
+    const hole = holesData.find(h => h.hole_number === selectedHoleNumber);
+
+    // reset alle buttons
+    [player1Btn, player2Btn, drawBtn].forEach(btn => btn.classList.remove("currentWinner"));
+
+    // bereken score tot nu
+    let score1 = 0, score2 = 0;
+    holesData.forEach(h => {
+        if (h.winner === 1) score1++;
+        if (h.winner === 2) score2++;
+    });
+    const diff = score1 - score2;
+
+    // update score-divs
+    // update score-divs
+    if (diff > 0) {
+        player1ScoreEl.textContent = diff + "UP";
+        player2ScoreEl.textContent = "";
+    } else if (diff < 0) {
+        player1ScoreEl.textContent = "";
+        player2ScoreEl.textContent = -diff + "UP";
+    } else {
+        // gelijkspel
+        player1ScoreEl.textContent = "A/S";
+        player2ScoreEl.textContent = "A/S";
+    }
+
+    // voeg class toe aan de huidige winner van de hole
+    if (hole.winner === 1) player1Btn.classList.add("currentWinner");
+    if (hole.winner === 2) player2Btn.classList.add("currentWinner");
+    if (hole.winner === 0) drawBtn.classList.add("currentWinner");
+}
+
+player1Btn.addEventListener("click", () => handleHoleClick(1));
+player2Btn.addEventListener("click", () => handleHoleClick(2));
+drawBtn.addEventListener("click", () => handleHoleClick(0));
+
     async function loadHoles() {
-      const res = await fetch(`${apiUrl}/matches/${matchId}/score`);
-      holesData = await res.json();
+        const res = await fetch(`${apiUrl}/matches/${matchId}/score`);
+        holesData = await res.json();
 
-      holesTableBody.innerHTML = "";
-      holesData.forEach(h => {
-        const row = document.createElement("tr");
-        const holeCell = document.createElement("td");
-        holeCell.textContent = h.hole_number;
+        // bepaal eerste hole die nog geen winner heeft
+        const nextHole = holesData.find(h => h.winner === null);
+        if (nextHole) {
+            selectedHoleNumber = nextHole.hole_number;
+            holeDropdown.value = selectedHoleNumber;
+        } else {
+            // als alles ingevuld is, pak de laatste hole
+            selectedHoleNumber = 18;
+            holeDropdown.value = selectedHoleNumber;
+        }
 
-        const winnerCell = document.createElement("td");
+        displayCurrentWinner();
+        }
 
-        const btn1 = document.createElement("button");
-        btn1.textContent = player1Name; // hier de echte naam
-        btn1.classList.toggle("red", h.winner === 1);
-        btn1.onclick = () => updateHole(h.hole_number, 1);
+   async function updateHole(holeNumber, winner) {
+        await fetch(`${apiUrl}/matches/${matchId}/holes/${holeNumber}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ winner }),
+        });
 
-        const btn2 = document.createElement("button");
-        btn2.textContent = player2Name; // hier de echte naam
-        btn2.classList.toggle("blue", h.winner === 2);
-        btn2.onclick = () => updateHole(h.hole_number, 2);
+        // kleine delay zodat je de klik visueel ziet
+        setTimeout(loadHoles, 200); // 200ms, kan je aanpassen
+        }
 
-        const btn0 = document.createElement("button");
-        btn0.textContent = "Gelijk";
-        btn0.classList.toggle("gray", h.winner === 0);
-        btn0.onclick = () => updateHole(h.hole_number, 0);
+        function handleHoleClick(winner) {
+    // reset buttons
+    [player1Btn, player2Btn, drawBtn].forEach(btn => btn.classList.remove("currentWinner"));
 
-        winnerCell.appendChild(btn1);
-        winnerCell.appendChild(btn0);
-        winnerCell.appendChild(btn2);
+    // voeg class direct toe
+    if (winner === 1) player1Btn.classList.add("currentWinner");
+    if (winner === 2) player2Btn.classList.add("currentWinner");
+    if (winner === 0) drawBtn.classList.add("currentWinner");
 
-        row.appendChild(holeCell);
-        row.appendChild(winnerCell);
-        holesTableBody.appendChild(row);
-      });
-
-      updateScoreDisplay();
+    // update score-divs direct
+    const player1ScoreEl = player1Btn.querySelector(".currentScore");
+    const player2ScoreEl = player2Btn.querySelector(".currentScore");
+    let score1 = 0, score2 = 0;
+    holesData.forEach(h => {
+        if (h.winner === 1) score1++;
+        if (h.winner === 2) score2++;
+    });
+    if (winner === 1) score1++;
+    if (winner === 2) score2++;
+    const diff = score1 - score2;
+    if (diff > 0) {
+        player1ScoreEl.textContent = diff + "UP";
+        player2ScoreEl.textContent = "";
+    } else if (diff < 0) {
+        player1ScoreEl.textContent = "";
+        player2ScoreEl.textContent = -diff + "UP";
+    } else {
+        player1ScoreEl.textContent = "A/S";
+        player2ScoreEl.textContent = "A/S";
     }
 
-    async function updateHole(holeNumber, winner) {
-      await fetch(`${apiUrl}/matches/${matchId}/holes/${holeNumber}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ winner }),
-      });
-      loadHoles();
-    }
+    // kleine delay voor backend update
+    setTimeout(async () => {
+        await updateHole(selectedHoleNumber, winner);
+
+        // ga naar volgende hole die nog geen winnaar heeft
+        const nextHole = holesData.find(h => h.winner === null);
+        if (nextHole) {
+            selectedHoleNumber = nextHole.hole_number;
+            holeDropdown.value = selectedHoleNumber;
+        }
+        displayCurrentWinner();
+    }, 400);
+}
   </script>
 </body>
 </html>
