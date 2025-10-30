@@ -1,7 +1,7 @@
 body {
   font-family: "Inter", sans-serif;
-  background: #fefefe;
-  color: #222;
+  background: #090943;
+  color: white;
   margin: 0;
   padding: 2rem;
 }
@@ -10,7 +10,7 @@ body {
 h1 {
   text-align: center;
   font-weight: 700;
-  color: #1c3d5a;
+  color: white;
   margin-bottom: 2rem;
   letter-spacing: 0.5px;
 }
@@ -157,10 +157,12 @@ a {
 .modal .modal-content label {color: white; display: flex; flex-direction: column; gap: 1rem; font-size: 1.2rem; font-weight: 700;}
 .modal .modal-content .closeModal    {  position: absolute; right: 1rem; top: 1rem; width: 1.5rem; height: 1.5rem; background-image: url('./images/close.svg'); background-repeat: no-repeat; background-position: center center; background-size: 1.5rem;}
 .modal .modal-content .closeModal:hover    { cursor: pointer;}
+#addMatchBtn                                {margin-top: 2.5rem;  background-color: green; color: white;}
+#addMatchBtn:hover                                {background-color: darkgreen; }
 
 .home.content                       {position: relative; display: flex; justify-content: center; flex-direction: row; align-items: center; padding: 2.5rem 0;}
 .home.content h1                    {margin: 0; position: relative;}
-.home.content .openModal           { width: 1.5rem; height: 1.5rem; margin-bottom: 0; margin-left: 1rem; background-image: url('./images/plus-icon.svg'); background-repeat: no-repeat; background-position: center center; background-size: 1.75rem;}
+.home.content .openModal           { width: 1.5rem; height: 1.5rem; margin-bottom: 0; margin-left: 1rem; background-image: url('./images/plus-icon-white.svg'); background-repeat: no-repeat; background-position: center center; background-size: 1.75rem;}
 .home.content .openModal:hover           {cursor: pointer;}
 
 
@@ -216,7 +218,7 @@ a {
   max-width: 400px;
   width: 100%;
   text-align: center;
-    gap: 0 !important;
+    gap: 1rem !important;
 }
 .modal-content h2 {margin: 0; font-size: 3rem; margin-bottom: 2rem;}
 
