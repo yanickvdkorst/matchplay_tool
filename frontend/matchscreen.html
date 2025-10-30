@@ -3,20 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <title>Match Details</title>
+  <link rel="stylesheet" href="reset.css">
   <link rel="stylesheet" href="style.css">
   <script defer src="./matchscreen.js"></script>
 </head>
 <body>
+    <div class="desktop">
+        <a href="./index.html">Terug</a>
+        <h1>Match ID: <span id="matchIdDisplay"></span></h1>
+        <button id="deleteMatchBtn">Verwijder wedstrijd</button>
+    </div>
     <div class="content">
-        <div class="top-content">
-            <a href="./index.html">Terug</a>
-            <h1>Match ID: <span id="matchIdDisplay"></span></h1>
-            <button id="deleteMatchBtn">Verwijder wedstrijd</button>
-        </div>
+        <h2 class="top-content" id="matchName">Halve Finale</h2>
         <div class="bottom-content">
-            <h2 id="player1Name">Speler 1</h2>
-            <h2>vs</h2>
-            <h2 id="player2Name">Speler 2</h2>
+            <p id="player1Name">Speler 1</p>
+            <h2 class="vs">vs</h2>
+            <p id="player2Name">Speler 2</p>
+        </div>
+    </div>
+    <div class="currentHole-container">
+        <div class="left">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20.0001 25.3335L10.6667 16.0002L20.0001 6.66683" stroke="#868FA2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+
+        </div>
+        <div class="center">
+            <p>Hole</p>
+            <h2 class="currentHole">1</h2>
+        </div>
+        <div class="right">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M11.9999 6.6665L21.3333 15.9998L11.9999 25.3332" stroke="#868FA2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+
         </div>
     </div>
 
@@ -24,10 +44,14 @@
         <div class="hole-select">
           <select id="holeDropdown"></select>
         </div>
+        <div class="info-container">
+            <h2>Wie heeft het hole gewonnen?</h2>
+            <p>Klik de winnaar aan om door te gaan</p>
+        </div>
         <div class="winner-buttons">
           <button class="currentWinner" id="player1Btn">Speler 1 <div class="currentScore show">1UP</div></button>
-          <button class="currentWinner" id="drawBtn">Gelijk</button>
           <button class="currentWinner" id="player2Btn">Speler 2 <div class="currentScore show">1UP</div></button>
+          <button class="currentWinner" id="drawBtn">Gelijk</button>
         </div>
     </div>
     <a class="mobile-button" href="./index.html"></a>

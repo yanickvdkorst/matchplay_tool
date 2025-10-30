@@ -5,6 +5,7 @@ const apiUrl = window.location.hostname === "127.0.0.1"
     const matchIdDisplay = document.getElementById("matchIdDisplay");
     const player1El = document.getElementById("player1Name");
     const player2El = document.getElementById("player2Name");
+    const matchNameEl = document.getElementById("matchName");
     let matchOver = false;
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -14,6 +15,7 @@ const apiUrl = window.location.hostname === "127.0.0.1"
     // globale variabelen
     let player1Name = "";
     let player2Name = "";
+    let matchName = "";
     let holesData = [];
     let selectedHoleNumber = 1;
 
@@ -25,6 +27,7 @@ const apiUrl = window.location.hostname === "127.0.0.1"
       if (match) {
           player1El.textContent = match.player1_name;
           player2El.textContent = match.player2_name;
+          matchNameEl.textContent = match.match_name;
           player1Name = match.player1_name;
           player2Name = match.player2_name;
           player1Btn.firstChild.textContent = player1Name;
@@ -61,19 +64,7 @@ const apiUrl = window.location.hostname === "127.0.0.1"
     const player1Btn = document.getElementById("player1Btn");
     const player2Btn = document.getElementById("player2Btn");
     const drawBtn = document.getElementById("drawBtn");
-
-    // vul dropdown
-    for (let i = 1; i <= 18; i++) {
-      const option = document.createElement("option");
-      option.value = i;
-      option.textContent = `Hole ${i}`;
-      holeDropdown.appendChild(option);
-    }
-
-    holeDropdown.addEventListener("change", () => {
-      selectedHoleNumber = parseInt(holeDropdown.value);
-      displayCurrentWinner();
-    });
+   
 
    function displayCurrentWinner() {
     if (!holesData.length) return;
@@ -284,4 +275,31 @@ function updateScoreCard() {
         `;
         scoreCardBody.appendChild(tr);
     });
+}
+
+const prevHoleBtn = document.querySelector(".currentHole-container .left");
+const nextHoleBtn = document.querySelector(".currentHole-container .right");
+const currentHoleEl = document.querySelector(".currentHole");
+
+prevHoleBtn.addEventListener("click", () => {
+  if (selectedHoleNumber > 1) {
+    selectedHoleNumber--;
+    updateHoleDisplay();
+  }
+});
+
+nextHoleBtn.addEventListener("click", () => {
+  if (selectedHoleNumber < 18) {
+    selectedHoleNumber++;
+    updateHoleDisplay();
+  }
+});
+
+function updateHoleDisplay() {
+  // update visuele hole tekst
+  currentHoleEl.textContent = selectedHoleNumber;
+  // update dropdown (zodat alles in sync blijft)
+  holeDropdown.value = selectedHoleNumber;
+  // herbereken huidige score etc.
+  displayCurrentWinner();
 }
