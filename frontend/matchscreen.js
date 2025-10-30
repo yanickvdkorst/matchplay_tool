@@ -17,22 +17,24 @@ const apiUrl = window.location.hostname === "127.0.0.1"
     let holesData = [];
     let selectedHoleNumber = 1;
 
-    // fetch match info
-    fetch(`${apiUrl}/matches?id=${matchId}`)
-      .then(res => res.json())
-      .then(data => {
-          const match = data.find(m => m.id == matchId);
-          if (match) {
-            player1El.textContent = match.player1_name;
-            player2El.textContent = match.player2_name;
-            player1Name = match.player1_name;
-            player2Name = match.player2_name;
-                // buttons updaten met echte namen
-            player1Btn.firstChild.textContent = player1Name;
-            player2Btn.firstChild.textContent = player2Name;
-            loadHoles();
-          }
-      });
+   fetch(`${apiUrl}/matches?id=${matchId}`)
+  .then(res => res.json())
+  .then(data => {
+      const match = data.find(m => m.id == matchId);
+      console.log(match);
+      if (match) {
+          player1El.textContent = match.player1_name;
+          player2El.textContent = match.player2_name;
+          player1Name = match.player1_name;
+          player2Name = match.player2_name;
+          player1Btn.firstChild.textContent = player1Name;
+          player2Btn.firstChild.textContent = player2Name;
+          loadHoles();
+      } else {
+          alert("Verkeerd wedstrijd ID!");
+          window.location.href = "./index.html"; // terug naar overzicht
+      }
+  });
 
     // Delete match
     const deleteMatchBtn = document.getElementById("deleteMatchBtn");
