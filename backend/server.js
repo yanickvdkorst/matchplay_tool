@@ -14,7 +14,7 @@ const pool = new Pool({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   port: process.env.DB_PORT,
-  ssl: { rejectUnauthorized: false } 
+//   ssl: { rejectUnauthorized: false } 
 });
 
 // ROUTE: nieuwe speler toevoegen
@@ -31,6 +31,7 @@ app.post("/players", async (req, res) => {
     res.status(500).json({ error: "Speler toevoegen mislukt" });
   }
 });
+
 // ROUTE: match verwijderen
 app.delete("/matches/:matchId", async (req, res) => {
   const { matchId } = req.params;
@@ -51,23 +52,23 @@ app.delete("/matches/:matchId", async (req, res) => {
 
 // ROUTE: nieuwe match starten
 app.post("/matches", async (req, res) => {
-  const { player1_id, player2_id } = req.body;
+  const { player1_id, player2_id, match_name } = req.body; // <-- naam toegevoegd
   try {
-    // Match aanmaken
+    // Match aanmaken met naam
     const match = await pool.query(
-      "INSERT INTO matches(player1_id, player2_id) VALUES($1, $2) RETURNING *",
-      [player1_id, player2_id]
+      "INSERT INTO matches(player1_id, player2_id, match_name) VALUES($1, $2, $3) RETURNING *",
+      [player1_id, player2_id, match_name]
     );
 
     const matchId = match.rows[0].id;
 
-        // 18 holes aanmaken met winner = null (nog niet gespeeld)
-        for (let i = 1; i <= 18; i++) {
-        await pool.query(
-            "INSERT INTO holes(match_id, hole_number, winner) VALUES($1, $2, $3)",
-            [matchId, i, null] // <-- hier null ipv 0
-        );
-}
+    // 18 holes aanmaken met winner = null
+    for (let i = 1; i <= 18; i++) {
+      await pool.query(
+        "INSERT INTO holes(match_id, hole_number, winner) VALUES($1, $2, $3)",
+        [matchId, i, null]
+      );
+    }
 
     res.json({ message: "Match aangemaakt", match_id: matchId });
   } catch (err) {
@@ -75,7 +76,6 @@ app.post("/matches", async (req, res) => {
     res.status(500).json({ error: "Match aanmaken mislukt" });
   }
 });
-
 // ROUTE: update hole winnaar
 app.put("/matches/:matchId/holes/:holeNumber", async (req, res) => {
   const { matchId, holeNumber } = req.params;
@@ -112,7 +112,7 @@ app.get("/matches/:matchId/score", async (req, res) => {
 app.get("/matches", async (req, res) => {
   try {
     const result = await pool.query(`
-      SELECT m.id, p1.name AS player1_name, p2.name AS player2_name
+      SELECT m.id, m.match_name, p1.name AS player1_name, p2.name AS player2_name
       FROM matches m
       JOIN players p1 ON m.player1_id = p1.id
       JOIN players p2 ON m.player2_id = p2.id

@@ -72,85 +72,160 @@ function getCurrentHole(holes, matchOver = false) {
     }
 }
 
-    async function loadDashboard() {
-      const res = await fetch(`${apiUrl}/matches`);
-      const matches = await res.json();
-      matchesBody.innerHTML = "";
+async function loadDashboard() {
+    const res = await fetch(`${apiUrl}/matches`);
+    const matches = await res.json();
+    matchesBody.innerHTML = "";
 
-        for (let m of matches) {
+    for (let m of matches) {
         const holesRes = await fetch(`${apiUrl}/matches/${m.id}/score`);
         const holes = await holesRes.json();
 
         const upScore = calculateUpScore(holes);
         const currentHole = getCurrentHole(holes, upScore.matchOver);
 
-        // standaard classes
+        // kleur en score bepalen
         let player1Class = "";
         let player2Class = "";
-        let score1Class = "";
-        let score2Class = "";
+        let player1Score = "";
+        let player2Score = "";
 
-       // kleur bepalen
-        if (upScore.player1Up && upScore.player1Up !== "A/S") {
-            player1Class = "red";
-            score1Class = "red";
+        if (upScore.player1Up === "A/S" || upScore.player2Up === "A/S") {
+            // gelijkspel -> beide spelers A/S
+            player1Score = "A/S";
+            player2Score = "A/S";
+        } else if (upScore.player1Up && upScore.player1Up !== "A/S") {
+            player1Class = "gold";
+            player1Score = upScore.player1Up;
         } else if (upScore.player2Up && upScore.player2Up !== "A/S") {
-            player2Class = "blue";
-            score2Class = "blue";
+            player2Class = "gold";
+            player2Score = upScore.player2Up;
         }
 
-       const row = document.createElement("tr");
-
-        // Voeg eventueel de classes toe zoals rood/blauw voor de score en speler
-        row.innerHTML = `
-            <td class="${score1Class} score">${upScore.player1Up}</td>
-            <td class="${player1Class}">${m.player1_name}</td>
-            <td class="currentHole">${currentHole}</td>
-            <td class="${player2Class}">${m.player2_name}</td>
-            <td class="${score2Class} score">${upScore.player2Up}</td>
-        `;
-
-        // Hele rij klikbaar maken
-        row.style.cursor = "pointer"; // laat zien dat het klikbaar is
-        row.onclick = () => {
+        // kaart container
+        const card = document.createElement("div");
+        card.className = "kaart";
+        card.style.cursor = "pointer";
+        card.onclick = () => {
             window.location.href = `matchscreen.html?matchId=${m.id}`;
         };
 
-        matchesBody.appendChild(row);
+        // kaart-top (matchnaam + hole nummer)
+        const kaartTop = document.createElement("div");
+        kaartTop.className = "kaart-top";
+
+        // matchnaam div
+        const matchNameDiv = document.createElement("p");
+        matchNameDiv.className = "match-name";
+        matchNameDiv.textContent = m.match_name; // <--- hier de matchnaam
+
+        // hole div
+        const holeDiv = document.createElement("div");
+        const holeText = document.createElement('p');
+        holeDiv.className = 'hole'
+        console.log(currentHole)
+       if (currentHole === 0) {
+        holeText.textContent = `Nog niet gestart`;
+        } else if (currentHole !== 'F') {
+            holeText.textContent = `Hole ${currentHole} / 18`;
+        } else {
+            holeText.textContent = `${currentHole}`;
+            holeDiv.className = 'hole finished'   
         }
+
+
+        // voeg toe aan kaartTop
+        holeDiv.appendChild(holeText);
+        kaartTop.appendChild(matchNameDiv);
+        kaartTop.appendChild(holeDiv);
+
+        // kaart-bottom
+        const kaartBottom = document.createElement("div");
+        kaartBottom.className = "kaart-bottom";
+
+        // speler1
+        const player1Div = document.createElement("div");
+        player1Div.className = `naam ${player1Class}`;
+
+        const player1NameH2 = document.createElement("h2");
+        player1NameH2.textContent = m.player1_name;
+
+        const player1ScoreH2 = document.createElement("h2");
+        player1ScoreH2.className = "score";
+        player1ScoreH2.textContent = player1Score;
+
+        player1Div.appendChild(player1NameH2);
+        player1Div.appendChild(player1ScoreH2);
+
+        // vs
+        const vsDiv = document.createElement("div");
+        vsDiv.className = "vs";
+        vsDiv.textContent = "vs";
+
+        // speler2
+        const player2Div = document.createElement("div");
+        player2Div.className = `naam ${player2Class}`;
+
+        const player2NameH2 = document.createElement("h2");
+        player2NameH2.textContent = m.player2_name;
+
+        const player2ScoreH2 = document.createElement("h2");
+        player2ScoreH2.className = "score";
+        player2ScoreH2.textContent = player2Score;
+
+        player2Div.appendChild(player2NameH2);
+        player2Div.appendChild(player2ScoreH2);
+
+        // alles in kaart-bottom
+        kaartBottom.appendChild(player1Div);
+        kaartBottom.appendChild(vsDiv);
+        kaartBottom.appendChild(player2Div);
+
+        // voeg top en bottom toe aan kaart
+        card.appendChild(kaartTop);
+        card.appendChild(kaartBottom);
+
+        matchesBody.appendChild(card);
     }
+}
 
-    // Nieuwe match toevoegen
-    addMatchBtn.onclick = async () => {
-      const p1Name = newPlayer1Input.value.trim();
-      const p2Name = newPlayer2Input.value.trim();
-      if (!p1Name || !p2Name) return alert("Vul beide spelers in");
+addMatchBtn.onclick = async () => {
+  const p1Name = newPlayer1Input.value.trim();
+  const p2Name = newPlayer2Input.value.trim();
+  const matchName = document.getElementById("newName").value.trim(); // <-- hier
 
-      // Spelers aanmaken
-      const p1 = await fetch(`${apiUrl}/players`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: p1Name }),
-      }).then(r => r.json());
+  if (!p1Name || !p2Name || !matchName) return alert("Vul beide spelers en de matchnaam in");
 
-      const p2 = await fetch(`${apiUrl}/players`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: p2Name }),
-      }).then(r => r.json());
+  // Spelers aanmaken
+  const p1 = await fetch(`${apiUrl}/players`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name: p1Name }),
+  }).then(r => r.json());
 
-      // Match aanmaken
-      await fetch(`${apiUrl}/matches`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ player1_id: p1.id, player2_id: p2.id }),
-      });
-    modals.forEach(modal => modal.classList.remove('open'));
-      // Velden leegmaken en dashboard refreshen
-      newPlayer1Input.value = "";
-      newPlayer2Input.value = "";
-      loadDashboard();
-    };
+  const p2 = await fetch(`${apiUrl}/players`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name: p2Name }),
+  }).then(r => r.json());
+
+  // Match aanmaken met naam
+  await fetch(`${apiUrl}/matches`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      player1_id: p1.id,
+      player2_id: p2.id,
+      match_name: matchName
+    }),
+  });
+
+  modals.forEach(modal => modal.classList.remove('open'));
+  newPlayer1Input.value = "";
+  newPlayer2Input.value = "";
+  document.getElementById("newName").value = "";
+  loadDashboard();
+};
 
     loadDashboard();
-    setInterval(loadDashboard, 5000); // elke 3 seconden live update
+    // setInterval(loadDashboard, 5000); // elke 3 seconden live update

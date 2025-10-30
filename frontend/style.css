@@ -1,6 +1,6 @@
 body {
   font-family: "Inter", sans-serif;
-  background: #090943;
+  background: #111A2C;
   color: white;
   margin: 0;
   padding: 2rem;
@@ -18,7 +18,7 @@ h1 {
 /* FORM */
 div {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 0;
 }
 
 label {
@@ -83,7 +83,7 @@ thead th {
 tbody tr {
   transition: background 0.2s;
 }
-.score          {aspect-ratio: 1 / 1; width: 5rem; height: 5rem;}
+
 
 .currentHole    {background-color: #EEEEEE; color: #11468F; width: 3rem;}
 tbody td {
@@ -152,7 +152,7 @@ a {
 
 
 .modal              {display: none;}
-.modal.open                {display: block; position: absolute; left: 0; right: 0; bottom: 0; top: 0; background-color: rgba(0, 0, 0, 0.6); margin-bottom: 0; display: flex; justify-content: center; align-items: center; gap: 1rem;}
+.modal.open                {display: block; position: absolute; left: 0; right: 0; bottom: 0; top: 0; background-color: rgba(0, 0, 0, 0.6); margin-bottom: 0; display: flex; justify-content: center; align-items: center; gap: 1rem; z-index: 100;}
 .modal .modal-content    { position: relative;   background-color: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px) saturate(180%); -webkit-backdrop-filter: blur(10px) saturate(180%); border: 1px solid rgba(255, 255, 255, 0.3); color: white; margin-bottom: 0; display: flex; flex-direction: column; gap: 1rem; padding: 5rem; border-radius: 1rem; }
 .modal .modal-content label {color: white; display: flex; flex-direction: column; gap: 1rem; font-size: 1.2rem; font-weight: 700;}
 .modal .modal-content .closeModal    {  position: absolute; right: 1rem; top: 1rem; width: 1.5rem; height: 1.5rem; background-image: url('./images/close.svg'); background-repeat: no-repeat; background-position: center center; background-size: 1.5rem;}
@@ -264,3 +264,24 @@ a {
 @media (max-width: 375px) {
   .winner-buttons #drawBtn      {width: 50dvw;}
 }
+
+
+#matchesBody                            {display: flex; flex-direction: column; gap: 2rem;}
+.kaart                                  {background-color: #19233A; border: 2px solid #2A3751; border-radius: 1rem; overflow: hidden;}
+.kaart *                                {color: #EFEBDA;}
+.kaart .kaart-top                       {display: flex; flex-direction: row; justify-content: space-between; align-items: center; padding: 1.5rem 2rem; box-sizing: border-box; background: linear-gradient(90deg, #11203C 0%, #1B2B4A 100%); border-bottom: 1px solid #2C3953; position: relative;}
+.kaart .kaart-top p                     {margin: 0; color: #949DB0; font-size: 1.5rem; font-weight: 700; }
+.kaart .kaart-top .match-name            {padding-left: 3rem;}
+.kaart .kaart-top::before               {content: ''; background-image: url('./images/trophy.svg'); background-repeat: no-repeat; width: 2rem; height: 2rem; background-size: 2rem; position: absolute; left: 2rem; }
+.kaart .kaart-top .hole                 {padding: .75rem 1rem; border: 1px solid #FFC619; background-color: #30343B; border-radius: 2rem;}
+.kaart .kaart-top .hole.finished        {background-color: #FFC619;} 
+.kaart .kaart-top .hole.finished p       {color: #1B2B4A;} 
+.kaart .kaart-top .hole p                {color: #FFC619; font-size: 1rem;}
+
+.kaart .kaart-bottom                    {display: flex; flex-direction: row; padding: 1.5rem 2rem; box-sizing: border-box;}
+.kaart .kaart-bottom .naam              {display: flex; flex-direction: row; padding: 2rem; box-sizing: border-box; padding: 1rem 1.5rem; border-radius: 1rem; overflow: hidden; flex: 1; border: 2px solid #2C3953; justify-content: space-between;}
+.kaart .kaart-bottom .naam h2           {margin: 0;}
+.kaart .kaart-bottom .naam.gold         {border: 2px solid #FFC619; background-color: #30343B;}
+.kaart .kaart-bottom .naam .score       { color: #949DB0;}
+.kaart .kaart-bottom .naam.gold .score  {color: #FFC619; text-transform: uppercase;}
+.kaart .kaart-bottom .vs                {width: 5rem; display: flex; justify-content: center; align-items: center; color: #868FA2; font-size: 1.5rem; font-weight: 700;}
