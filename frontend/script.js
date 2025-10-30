@@ -30,7 +30,6 @@ const apiUrl = window.location.hostname === "127.0.0.1"
 });
     
 
-   // Berekening van live UP-score
 function calculateUpScore(holes) {
     let score1 = 0;
     let score2 = 0;
@@ -38,26 +37,38 @@ function calculateUpScore(holes) {
     holes.forEach(h => {
         if (h.winner === 1) score1++;
         if (h.winner === 2) score2++;
-        // winner === 0 --> gelijkspel, niet tellen
     });
 
+    const playedHoles = holes.filter(h => h.winner !== null).length;
+    const remainingHoles = 18 - playedHoles;
     const diff = score1 - score2;
 
-    if (diff > 0) return { player1Up: `${diff}UP`, player2Up: "" };
-    if (diff < 0) return { player1Up: "", player2Up: `${-diff}UP` };
-    // bij gelijke stand
-    return { player1Up: "A/S", player2Up: "A/S" };
+    if (diff > 0) {
+        if (diff > remainingHoles) {
+            return { player1Up: `${diff}&${remainingHoles}`, player2Up: "", matchOver: true };
+        }
+        return { player1Up: `${diff}UP`, player2Up: "", matchOver: false };
+    }
+
+    if (diff < 0) {
+        if (-diff > remainingHoles) {
+            return { player1Up: "", player2Up: `${-diff}&${remainingHoles}`, matchOver: true };
+        }
+        return { player1Up: "", player2Up: `${-diff}UP`, matchOver: false };
+    }
+
+    return { player1Up: "A/S", player2Up: "A/S", matchOver: false };
 }
 
-   function getCurrentHole(holes) {
-    // zoek de laatste hole die een winnaar heeft
+// Bepaal welke hole getoond wordt
+function getCurrentHole(holes, matchOver = false) {
+    if (matchOver) return "F"; // match is beslist
+
     const lastPlayed = [...holes].reverse().find(h => h.winner !== null);
     if (lastPlayed) {
-        // als er nog ruimte is voor de volgende hole → toon dat nummer
         return lastPlayed.hole_number === 18 ? "F" : lastPlayed.hole_number;
     } else {
-        // nog geen enkele hole gespeeld
-        return 0;
+        return 0; // nog geen enkele hole gespeeld
     }
 }
 
@@ -71,7 +82,7 @@ function calculateUpScore(holes) {
         const holes = await holesRes.json();
 
         const upScore = calculateUpScore(holes);
-        const currentHole = getCurrentHole(holes);
+        const currentHole = getCurrentHole(holes, upScore.matchOver);
 
         // standaard classes
         let player1Class = "";

@@ -167,9 +167,9 @@ a {
 .score-form                             {position: relative; width: 100%; background-color: blue; box-sizing: border-box; display: flex; flex-direction: column;}
 .winner-buttons                         {width: 100%; display: flex; flex-direction: row; margin-bottom: 0; gap: 0rem; position: relative;}
 .winner-buttons button                  {flex: 1; aspect-ratio: 1 / 1; border-radius: 0; border: transparent solid 2px; font-size: 4rem; position: relative;}
-.winner-buttons #player1Btn             {background-color: #DA1212;}
+.winner-buttons #player1Btn             {background-color: #D2090E;}
 .winner-buttons #drawBtn                {background-color: grey; width: 20dvw; border-radius: 66%; aspect-ratio: 1 / 1; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000;}
-.winner-buttons #player2Btn             {background-color: #041562;}
+.winner-buttons #player2Btn             {background-color: #1C428D;}
 
 .winner-buttons .currentScore             {display: none;}
 .winner-buttons .currentScore.show            {display: block; background-color: rgba(255, 255, 255, 0.2); position: absolute;  padding: .5rem;  color: white; z-index: 100;  margin-bottom: 0; font-size: 4rem;}

@@ -5,6 +5,7 @@ const apiUrl = window.location.hostname === "127.0.0.1"
     const matchIdDisplay = document.getElementById("matchIdDisplay");
     const player1El = document.getElementById("player1Name");
     const player2El = document.getElementById("player2Name");
+    let matchOver = false;
 
     const urlParams = new URLSearchParams(window.location.search);
     const matchId = urlParams.get("matchId");
@@ -133,18 +134,21 @@ drawBtn.addEventListener("click", () => handleHoleClick(0));
         displayCurrentWinner();
         }
 
-   async function updateHole(holeNumber, winner) {
-        await fetch(`${apiUrl}/matches/${matchId}/holes/${holeNumber}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ winner }),
-        });
+  async function updateHole(holeNumber, winner) {
+    await fetch(`${apiUrl}/matches/${matchId}/holes/${holeNumber}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ winner }),
+    });
 
-        // kleine delay zodat je de klik visueel ziet
-        setTimeout(loadHoles, 100); // 200ms, kan je aanpassen
-        }
+    // kleine delay zodat je de klik visueel ziet
+    // ⚠️ alleen loadHoles als match niet over is
+    if (!holesData.some(h => h.matchOver)) {
+        setTimeout(loadHoles, 100);
+    }
+}
 
- function handleHoleClick(winner) {
+function handleHoleClick(winner) {
     // reset buttons
     [player1Btn, player2Btn, drawBtn].forEach(btn => btn.classList.remove("currentWinner"));
 
@@ -153,56 +157,83 @@ drawBtn.addEventListener("click", () => handleHoleClick(0));
     if (winner === 2) player2Btn.classList.add("currentWinner");
     if (winner === 0) drawBtn.classList.add("currentWinner");
 
-    // update score-divs direct
     const player1ScoreEl = player1Btn.querySelector(".currentScore");
     const player2ScoreEl = player2Btn.querySelector(".currentScore");
+
+    // bereken huidige score
     let score1 = 0, score2 = 0;
     holesData.forEach(h => {
         if (h.winner === 1) score1++;
         if (h.winner === 2) score2++;
     });
+
     if (winner === 1) score1++;
     if (winner === 2) score2++;
+
     const diff = score1 - score2;
-    if (diff > 0) {
-        player1ScoreEl.textContent = diff + "UP";
-        player2ScoreEl.textContent = "";
-        player1ScoreEl.classList.add('show')
-        player2ScoreEl.classList.remove('show')
-    } else if (diff < 0) {
-        player1ScoreEl.textContent = "";
-        player1ScoreEl.classList.remove('show')
-        player2ScoreEl.classList.add('show')
-        player2ScoreEl.textContent = -diff + "UP";
+    const playedHoles = holesData.filter(h => h.winner !== null).length + 1;
+    const remainingHoles = 18 - playedHoles;
+    const matchOver = Math.abs(diff) > remainingHoles;
+
+    // hier direct finale score zetten (optie 1)
+    if (matchOver) {
+        const lead = Math.abs(diff);
+        const holesLeft = remainingHoles;
+        const finalScore = `${lead}&${holesLeft}`;
+
+        if (diff > 0) {
+            player1ScoreEl.textContent = finalScore;
+            player2ScoreEl.textContent = "";
+        } else {
+            player1ScoreEl.textContent = "";
+            player2ScoreEl.textContent = finalScore;
+        }
+
+        player1ScoreEl.classList.add('show');
+        player2ScoreEl.classList.add('show');
+
+        // markeer dat de match over is zodat displayCurrentWinner niet refresh
+        holesData.forEach(h => h.matchOver = true);
+
     } else {
-        player1ScoreEl.textContent = "A/S";
-        player2ScoreEl.textContent = "A/S";
-        player1ScoreEl.classList.add('show')
-        player2ScoreEl.classList.add('show')
+        // gewone update zolang match niet klaar is
+        if (diff > 0) {
+            player1ScoreEl.textContent = diff + "UP";
+            player2ScoreEl.textContent = "";
+            player1ScoreEl.classList.add('show');
+            player2ScoreEl.classList.remove('show');
+        } else if (diff < 0) {
+            player1ScoreEl.textContent = "";
+            player2ScoreEl.textContent = (-diff) + "UP";
+            player2ScoreEl.classList.add('show');
+            player1ScoreEl.classList.remove('show');
+        } else {
+            player1ScoreEl.textContent = "A/S";
+            player2ScoreEl.textContent = "A/S";
+            player1ScoreEl.classList.add('show');
+            player2ScoreEl.classList.add('show');
+        }
     }
 
     // kleine delay voor backend update
+    // kleine delay voor backend update
     setTimeout(async () => {
-    // update lokale data zodat het direct klopt
-    const holeIndex = holesData.findIndex(h => h.hole_number === selectedHoleNumber);
-    if (holeIndex !== -1) holesData[holeIndex].winner = winner;
+        const holeIndex = holesData.findIndex(h => h.hole_number === selectedHoleNumber);
+        if (holeIndex !== -1) holesData[holeIndex].winner = winner;
 
-    // update backend
-    await updateHole(selectedHoleNumber, winner);
+        await updateHole(selectedHoleNumber, winner);
 
-    // ververs pas later vanuit backend om kleine latency te maskeren
-    setTimeout(loadHoles, 100);
-
-    // bepaal volgende hole lokaal
-    const nextHole = holesData.find(h => h.winner === null);
-    if (nextHole) {
-        selectedHoleNumber = nextHole.hole_number;
-        holeDropdown.value = selectedHoleNumber;
-    }
-    displayCurrentWinner();
-}, 100);
+        // alleen refreshen als match niet klaar is
+        if (!holesData.some(h => h.matchOver)) {
+            const nextHole = holesData.find(h => h.winner === null);
+            if (nextHole) {
+                selectedHoleNumber = nextHole.hole_number;
+                holeDropdown.value = selectedHoleNumber;
+            }
+            displayCurrentWinner();
+        }
+    }, 100);
 }
-
 // Scorekaart functionaliteit
 const scoreCardButtons = document.querySelectorAll("#scoreCard"); // gebruik class ipv id
 const scoreCardModal = document.getElementById("scoreCardModal");
