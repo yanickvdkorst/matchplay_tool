@@ -4,6 +4,7 @@ body {
   color: white;
   margin: 0;
   padding: 2rem;
+  height: 100vh;
 }
 
 /* TITEL */
@@ -83,6 +84,7 @@ thead th {
 tbody tr {
   transition: background 0.2s;
 }
+
 
 
 .currentHole    {background-color: #EEEEEE; color: #11468F; width: 3rem;}
@@ -171,6 +173,11 @@ a {
 .home.content .openModal           { width: 1.5rem; height: 1.5rem; margin-bottom: 0; margin-left: 1rem; background-image: url('./images/plus-icon-white.svg'); background-repeat: no-repeat; background-position: center center; background-size: 1.75rem;}
 .home.content .openModal:hover           {cursor: pointer;}
 
+@media (max-width: 768px) {
+.home.content                       {flex-direction: column;}
+.home.content h1                    {font-size: 1.5rem;}
+}
+
 
 .score-form                             {background-color: #19233A; margin-bottom: 1.5rem; border-radius: 1rem; overflow: hidden; display: flex; flex-direction: column; gap: 1rem; padding: 1.5rem 1rem;}
 .score-form .info-container h2          {font-size: 1rem; font-weight: 700; color: #EFEBDA; margin-bottom: 1rem;}
@@ -255,9 +262,7 @@ a {
 
 }
 
-@media (max-width: 375px) {
 
-}
 
 
 #matchesBody                            {display: flex; flex-direction: column; gap: 1.5rem;}
@@ -279,3 +284,12 @@ a {
 .kaart .kaart-bottom .naam .score       { color: #949DB0;}
 .kaart .kaart-bottom .naam.gold .score  {color: #FFC619; text-transform: uppercase;}
 .kaart .kaart-bottom .vs                {width: 5rem; display: flex; justify-content: center; align-items: center; color: #868FA2; font-size: 1.5rem; font-weight: 700;}
+
+@media (max-width: 768px) {
+  .kaart .kaart-bottom                  {flex-direction: column; gap: 1rem; padding: 1rem .75rem;}
+  .kaart .kaart-bottom .naam h2           {font-size: 1.2rem;}
+}
+
+.scorecard                              { display: flex; flex-direction: column; gap: 1rem;}
+.scorecard h2                              {font-weight: 700; border-radius: 0.5rem; border: 1px solid #2B3852; padding: 0.5rem;} 
+.scorecard .kaart                           {border-radius: 0.5rem; background: #19233A; padding: 1rem;}

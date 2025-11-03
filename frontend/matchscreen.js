@@ -114,15 +114,8 @@ drawBtn.addEventListener("click", () => handleHoleClick(0));
         holesData = await res.json();
 
         // bepaal eerste hole die nog geen winner heeft
-        const nextHole = holesData.find(h => h.winner === null);
-        if (nextHole) {
-            selectedHoleNumber = nextHole.hole_number;
-            holeDropdown.value = selectedHoleNumber;
-        } else {
-            // als alles ingevuld is, pak de laatste hole
-            selectedHoleNumber = 18;
-            holeDropdown.value = selectedHoleNumber;
-        }
+       // laat de huidige geselecteerde hole staan
+    holeDropdown.value = selectedHoleNumber;
 
         displayCurrentWinner();
         }
@@ -135,10 +128,7 @@ drawBtn.addEventListener("click", () => handleHoleClick(0));
     });
 
     // kleine delay zodat je de klik visueel ziet
-    // ⚠️ alleen loadHoles als match niet over is
-    if (!holesData.some(h => h.matchOver)) {
-        setTimeout(loadHoles, 100);
-    }
+ 
 }
 
 function handleHoleClick(winner) {
@@ -216,13 +206,9 @@ function handleHoleClick(winner) {
 
         await updateHole(selectedHoleNumber, winner);
 
-        // alleen refreshen als match niet klaar is
+
+       // alleen refreshen als match niet klaar is
         if (!holesData.some(h => h.matchOver)) {
-            const nextHole = holesData.find(h => h.winner === null);
-            if (nextHole) {
-                selectedHoleNumber = nextHole.hole_number;
-                holeDropdown.value = selectedHoleNumber;
-            }
             displayCurrentWinner();
         }
     }, 100);
