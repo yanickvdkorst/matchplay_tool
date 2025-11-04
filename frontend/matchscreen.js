@@ -118,6 +118,7 @@ drawBtn.addEventListener("click", () => handleHoleClick(0));
     holeDropdown.value = selectedHoleNumber;
 
         displayCurrentWinner();
+          renderHoles(); // voeg deze regel toe
         }
 
   async function updateHole(holeNumber, winner) {
@@ -205,6 +206,7 @@ function handleHoleClick(winner) {
         if (holeIndex !== -1) holesData[holeIndex].winner = winner;
 
         await updateHole(selectedHoleNumber, winner);
+  renderHoles();
 
 
        // alleen refreshen als match niet klaar is
@@ -212,56 +214,9 @@ function handleHoleClick(winner) {
             displayCurrentWinner();
         }
     }, 100);
+    
 }
-// Scorekaart functionaliteit
-const scoreCardButtons = document.querySelectorAll("#scoreCard"); // gebruik class ipv id
-const scoreCardModal = document.getElementById("scoreCardModal");
-const closeScoreCardBtn = document.getElementById("closeScoreCard");
-const scoreCardBody = document.querySelector("#scoreCardTable tbody");
 
-// herhaal voor elke button
-scoreCardButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
-        updateScoreCard();
-        scoreCardModal.classList.add("open");
-    });
-});
-
-closeScoreCardBtn.addEventListener("click", () => {
-    scoreCardModal.classList.remove("open");
-});
-
-// vul de scorekaart
-function updateScoreCard() {
-    if (!holesData.length) return;
-    scoreCardBody.innerHTML = "";
-
-    holesData.forEach(h => {
-        const tr = document.createElement("tr");
-        let winnerText = "";
-        let colorClass = "";
-
-        if (h.winner === 1) {
-            winnerText = player1Name;
-            colorClass = "red";
-        } else if (h.winner === 2) {
-            winnerText = player2Name;
-            colorClass = "blue";
-        } else if (h.winner === 0) {
-            winnerText = "Gelijk";
-            colorClass = "gray";
-        } else {
-            winnerText = "-";
-            colorClass = "";
-        }
-
-        tr.innerHTML = `
-            <td class="hole">${h.hole_number}</td>
-            <td class="${colorClass}">${winnerText}</td>
-        `;
-        scoreCardBody.appendChild(tr);
-    });
-}
 
 const prevHoleBtn = document.querySelector(".currentHole-container .left");
 const nextHoleBtn = document.querySelector(".currentHole-container .right");
@@ -288,4 +243,24 @@ function updateHoleDisplay() {
   holeDropdown.value = selectedHoleNumber;
   // herbereken huidige score etc.
   displayCurrentWinner();
+}
+
+const kaartContainer = document.querySelector(".kaart");
+
+function renderHoles() {
+  if (!holesData.length) return;
+
+  kaartContainer.innerHTML = ""; // reset even
+  holesData.forEach((h) => {
+    const holeDiv = document.createElement("div");
+    holeDiv.classList.add("hole");
+    holeDiv.textContent = h.hole_number;
+
+    // voeg een class toe afhankelijk van winnaar
+    if (h.winner === 1) holeDiv.classList.add("speler-1");
+    else if (h.winner === 2) holeDiv.classList.add("speler-2");
+    else if (h.winner === 0) holeDiv.classList.add("gelijk");
+
+    kaartContainer.appendChild(holeDiv);
+  });
 }
