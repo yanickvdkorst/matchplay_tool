@@ -245,12 +245,13 @@ function updateHoleDisplay() {
   displayCurrentWinner();
 }
 
-const kaartContainer = document.querySelector(".kaart");
+const kaartContainer = document.querySelector(".holeskaart");
 
 function renderHoles() {
   if (!holesData.length) return;
 
   kaartContainer.innerHTML = ""; // reset even
+
   holesData.forEach((h) => {
     const holeDiv = document.createElement("div");
     holeDiv.classList.add("hole");
@@ -261,6 +262,32 @@ function renderHoles() {
     else if (h.winner === 2) holeDiv.classList.add("speler-2");
     else if (h.winner === 0) holeDiv.classList.add("gelijk");
 
+    // check of dit de geselecteerde hole is
+    if (h.hole_number === selectedHoleNumber) {
+      holeDiv.classList.add("selected-hole");
+    }
+
+    // klik-event om naar die hole te gaan
+    holeDiv.addEventListener("click", () => {
+      selectedHoleNumber = h.hole_number;
+      updateHoleDisplay();
+      renderHoles(); // hertekenen zodat highlight meeverandert
+    });
+
     kaartContainer.appendChild(holeDiv);
   });
+}
+
+const scorecardEl = document.querySelector(".scorecard");
+
+if (scorecardEl) {
+  scorecardEl.addEventListener("click", () => {
+    openScorecard();
+    scorecardEl.classList.toggle("open");
+  });
+}
+
+function openScorecard() {
+  const kaart = document.querySelector(".holeskaart");
+  kaart.classList.toggle("open");
 }
