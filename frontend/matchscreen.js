@@ -127,10 +127,29 @@ drawBtn.addEventListener("click", () => handleHoleClick(0));
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ winner }),
     });
-
-    // kleine delay zodat je de klik visueel ziet
- 
 }
+
+// voeg deze functie toe ergens bovenin je file, buiten handleHoleClick
+function showToast(message, duration = 2000) {
+    let toastEl = document.querySelector(".toast");
+
+    // maak toast element aan als die nog niet bestaat
+    if (!toastEl) {
+        toastEl = document.createElement("div");
+        toastEl.classList.add("toast");
+        document.body.appendChild(toastEl);
+    }
+
+    toastEl.textContent = message;
+    toastEl.classList.add("show");
+
+    // verwijder na duration
+    setTimeout(() => {
+        toastEl.classList.remove("show");
+    }, duration);
+}
+
+
 
 function handleHoleClick(winner) {
     // reset buttons
@@ -202,18 +221,20 @@ function handleHoleClick(winner) {
     // kleine delay voor backend update
     // kleine delay voor backend update
     setTimeout(async () => {
-        const holeIndex = holesData.findIndex(h => h.hole_number === selectedHoleNumber);
-        if (holeIndex !== -1) holesData[holeIndex].winner = winner;
+    const holeIndex = holesData.findIndex(h => h.hole_number === selectedHoleNumber);
+    if (holeIndex !== -1) holesData[holeIndex].winner = winner;
 
-        await updateHole(selectedHoleNumber, winner);
-  renderHoles();
+    await updateHole(selectedHoleNumber, winner);
+    renderHoles();
 
+    // alleen refreshen als match niet klaar is
+    if (!holesData.some(h => h.matchOver)) {
+        displayCurrentWinner();
+    }
 
-       // alleen refreshen als match niet klaar is
-        if (!holesData.some(h => h.matchOver)) {
-            displayCurrentWinner();
-        }
-    }, 100);
+    // toast laten zien
+    showToast("Score opgeslagen!");
+}, 100);
     
 }
 
