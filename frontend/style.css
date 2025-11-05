@@ -7,6 +7,10 @@ body {
   height: 100vh;
 }
 
+@media (max-width: 768px) {
+  body                    {padding: 2rem 1rem !important;}
+}
+
 /* TITEL */
 h1 {
   text-align: center;
@@ -286,6 +290,7 @@ a {
 .kaart .kaart-bottom .vs                {width: 5rem; display: flex; justify-content: center; align-items: center; color: #868FA2; font-size: 1.5rem; font-weight: 700;}
 
 @media (max-width: 768px) {
+  .kaart .kaart-top                     {padding: 1rem;}
   .kaart .kaart-bottom                  {flex-direction: column; gap: 1rem; padding: 1rem .75rem;}
   .kaart .kaart-bottom .naam h2           {font-size: 1.2rem;}
 }
