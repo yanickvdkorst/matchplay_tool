@@ -127,5 +127,5 @@ app.get("/matches", async (req, res) => {
 
 const PORT = 5050;
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Server draait op http://localhost:${PORT}`);
+  // console.log(`Server draait op http://localhost:${PORT}`);
 });

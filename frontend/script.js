@@ -123,7 +123,7 @@ async function loadDashboard() {
         const holeDiv = document.createElement("div");
         const holeText = document.createElement('p');
         holeDiv.className = 'hole'
-        console.log(currentHole)
+        // console.log(currentHole)
        if (currentHole === 0) {
         holeText.textContent = `Nog niet gestart`;
         } else if (currentHole !== 'F') {

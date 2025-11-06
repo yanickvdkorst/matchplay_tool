@@ -23,7 +23,7 @@ const apiUrl = window.location.hostname === "127.0.0.1"
   .then(res => res.json())
   .then(data => {
       const match = data.find(m => m.id == matchId);
-      console.log(match);
+      // console.log(match);
       if (match) {
           player1El.textContent = match.player1_name;
           player2El.textContent = match.player2_name;
@@ -132,15 +132,10 @@ drawBtn.addEventListener("click", () => handleHoleClick(0));
 // voeg deze functie toe ergens bovenin je file, buiten handleHoleClick
 function showToast(message, duration = 2000) {
     let toastEl = document.querySelector(".toast");
+    let toastElp = document.querySelector(".toast p");
+    // console.log(toastElp);
 
-    // maak toast element aan als die nog niet bestaat
-    if (!toastEl) {
-        toastEl = document.createElement("div");
-        toastEl.classList.add("toast");
-        document.body.appendChild(toastEl);
-    }
-
-    toastEl.textContent = message;
+    toastElp.textContent = message;
     toastEl.classList.add("show");
 
     // verwijder na duration
@@ -151,91 +146,101 @@ function showToast(message, duration = 2000) {
 
 
 
-function handleHoleClick(winner) {
-    // reset buttons
-    [player1Btn, player2Btn, drawBtn].forEach(btn => btn.classList.remove("currentWinner"));
+async function handleHoleClick(winner) {
+  // immediate UI toggle for clicked buttons
+  [player1Btn, player2Btn, drawBtn].forEach(btn => btn.classList.remove("currentWinner"));
+  if (winner === 1) player1Btn.classList.add("currentWinner");
+  if (winner === 2) player2Btn.classList.add("currentWinner");
+  if (winner === 0) drawBtn.classList.add("currentWinner");
 
-    // voeg class direct toe
-    if (winner === 1) player1Btn.classList.add("currentWinner");
-    if (winner === 2) player2Btn.classList.add("currentWinner");
-    if (winner === 0) drawBtn.classList.add("currentWinner");
+  const player1ScoreEl = player1Btn.querySelector(".currentScore");
+  const player2ScoreEl = player2Btn.querySelector(".currentScore");
 
-    const player1ScoreEl = player1Btn.querySelector(".currentScore");
-    const player2ScoreEl = player2Btn.querySelector(".currentScore");
+  // calculate current aggregate scores (based on holesData)
+  let score1 = 0, score2 = 0;
+  holesData.forEach(h => {
+    if (h.winner === 1) score1++;
+    if (h.winner === 2) score2++;
+  });
 
-    // bereken huidige score
-    let score1 = 0, score2 = 0;
-    holesData.forEach(h => {
-        if (h.winner === 1) score1++;
-        if (h.winner === 2) score2++;
-    });
+  // optimistic local update for the UI (show what it will be)
+  if (winner === 1) score1++;
+  if (winner === 2) score2++;
 
-    if (winner === 1) score1++;
-    if (winner === 2) score2++;
+  const diff = score1 - score2;
 
-    const diff = score1 - score2;
-    const playedHoles = holesData.filter(h => h.winner !== null).length + 1;
-    const remainingHoles = 18 - playedHoles;
-    const matchOver = Math.abs(diff) > remainingHoles;
-
-    // hier direct finale score zetten (optie 1)
-    if (matchOver) {
-        const lead = Math.abs(diff);
-        const holesLeft = remainingHoles;
-        const finalScore = `${lead}&${holesLeft}`;
-
-        if (diff > 0) {
-            player1ScoreEl.textContent = finalScore;
-            player2ScoreEl.textContent = "";
-        } else {
-            player1ScoreEl.textContent = "";
-            player2ScoreEl.textContent = finalScore;
-        }
-
-        player1ScoreEl.classList.add('show');
-        player2ScoreEl.classList.add('show');
-
-        // markeer dat de match over is zodat displayCurrentWinner niet refresh
-        holesData.forEach(h => h.matchOver = true);
-
+  // update score visuals immediately
+  if (Math.abs(diff) > 0) {
+    if (diff > 0) {
+      player1ScoreEl.textContent = diff + "UP";
+      player2ScoreEl.textContent = "";
     } else {
-        // gewone update zolang match niet klaar is
-        if (diff > 0) {
-            player1ScoreEl.textContent = diff + "UP";
-            player2ScoreEl.textContent = "";
-            player1ScoreEl.classList.add('show');
-            player2ScoreEl.classList.remove('show');
-        } else if (diff < 0) {
-            player1ScoreEl.textContent = "";
-            player2ScoreEl.textContent = (-diff) + "UP";
-            player2ScoreEl.classList.add('show');
-            player1ScoreEl.classList.remove('show');
-        } else {
-            player1ScoreEl.textContent = "A/S";
-            player2ScoreEl.textContent = "A/S";
-            player1ScoreEl.classList.add('show');
-            player2ScoreEl.classList.add('show');
-        }
+      player1ScoreEl.textContent = (-diff) + "UP";
+      player2ScoreEl.textContent = "";
     }
+    player1ScoreEl.classList.add('show');
+    player2ScoreEl.classList.add('show');
+  } else {
+    player1ScoreEl.textContent = "A/S";
+    player2ScoreEl.textContent = "A/S";
+    player1ScoreEl.classList.add('show');
+    player2ScoreEl.classList.add('show');
+  }
 
-    // kleine delay voor backend update
-    // kleine delay voor backend update
-    setTimeout(async () => {
-    const holeIndex = holesData.findIndex(h => h.hole_number === selectedHoleNumber);
-    if (holeIndex !== -1) holesData[holeIndex].winner = winner;
+  // update model locally
+  const holeIndex = holesData.findIndex(h => h.hole_number === selectedHoleNumber);
+  if (holeIndex !== -1) holesData[holeIndex].winner = winner;
 
+  // send to backend and wait
+  try {
     await updateHole(selectedHoleNumber, winner);
-    renderHoles();
+  } catch (err) {
+    console.error("Failed to update hole:", err);
+    showToast("Opslaan mislukt");
+    return;
+  }
 
-    // alleen refreshen als match niet klaar is
-    if (!holesData.some(h => h.matchOver)) {
-        displayCurrentWinner();
-    }
+  // re-render everything reliably
+  if (typeof renderHoles === "function") renderHoles();
+  displayCurrentWinner();
 
-    // toast laten zien
-    showToast("Score opgeslagen!");
-}, 100);
-    
+  // show success toast
+  showToast(`Hole ${selectedHoleNumber} opgeslagen!`);
+
+  // ---- recompute whether match is over (based on updated holesData) ----
+  let s1 = 0, s2 = 0;
+  holesData.forEach(h => {
+    if (h.winner === 1) s1++;
+    if (h.winner === 2) s2++;
+  });
+  const newDiff = s1 - s2;
+  const playedNow = holesData.filter(h => h.winner !== null).length;
+  const remainingNow = 18 - playedNow;
+  const recomputedMatchOver = Math.abs(newDiff) > remainingNow;
+
+  // console.log("auto-next check:", {
+  //   selectedHoleNumber,
+  //   playedNow,
+  //   remainingNow,
+  //   newDiff,
+  //   recomputedMatchOver
+  // });
+
+  // only auto-advance if not match over and not last hole
+  if (!recomputedMatchOver && selectedHoleNumber < 18) {
+    setTimeout(() => {
+      selectedHoleNumber++;
+      // safe update display: check elements exist
+      if (currentHoleEl) currentHoleEl.textContent = selectedHoleNumber;
+      const dropdown = document.getElementById("holeDropdown");
+      if (dropdown) dropdown.value = selectedHoleNumber;
+      if (typeof updateHoleDisplay === "function") updateHoleDisplay();
+      if (kaartContainer) renderHoles();
+    }, 800); // small delay so user sees toast
+  } else {
+    // if match over or last hole, log for debugging
+    // console.log("Not auto-advancing (match over or last hole).");
+  }
 }
 
 
