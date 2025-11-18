@@ -14,12 +14,14 @@ const pool = new Pool({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   port: process.env.DB_PORT,
-  ssl: { rejectUnauthorized: false } 
+  // ssl: { rejectUnauthorized: false } 
 });
 
 // ROUTE: nieuwe speler toevoegen
 app.post("/players", async (req, res) => {
-  const { name } = req.body;
+  const { token,name } = req.body;
+    if (!validTokens.has(token)) return res.status(403).json({ error: "Invalid token" });
+
   try {
     const result = await pool.query(
       "INSERT INTO players(name) VALUES($1) RETURNING *",
@@ -52,7 +54,9 @@ app.delete("/matches/:matchId", async (req, res) => {
 
 // ROUTE: nieuwe match starten
 app.post("/matches", async (req, res) => {
-  const { player1_id, player2_id, match_name } = req.body; // <-- naam toegevoegd
+  const { token, player1_id, player2_id, match_name } = req.body; // <-- naam toegevoegd
+    if (!validTokens.has(token)) return res.status(403).json({ error: "Invalid token" });
+  validTokens.delete(token);
   try {
     // Match aanmaken met naam
     const match = await pool.query(
@@ -128,4 +132,18 @@ app.get("/matches", async (req, res) => {
 const PORT = 5050;
 app.listen(PORT, "0.0.0.0", () => {
   // console.log(`Server draait op http://localhost:${PORT}`);
+});
+
+const crypto = require("crypto");
+
+const validTokens = new Set();
+
+// Token endpoint
+app.get("/api/get-token", (req, res) => {
+  const token = crypto.randomBytes(16).toString("hex");
+  validTokens.add(token);
+
+  // Token na 5 minuten vervallen
+  setTimeout(() => validTokens.delete(token), 5 * 60 * 1000);
+  res.json({ token });
 });

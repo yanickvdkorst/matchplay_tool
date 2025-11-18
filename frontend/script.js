@@ -192,40 +192,42 @@ async function loadDashboard() {
 addMatchBtn.onclick = async () => {
   const p1Name = newPlayer1Input.value.trim();
   const p2Name = newPlayer2Input.value.trim();
-  const matchName = document.getElementById("newName").value.trim(); // <-- hier
+  const matchName = document.getElementById("newName").value.trim();
+  if (!p1Name || !p2Name || !matchName) return alert("Vul alle velden in");
 
-  if (!p1Name || !p2Name || !matchName) return alert("Vul beide spelers en de matchnaam in");
+  // Haal 1 token
+  const tokenRes = await fetch(`${apiUrl}/api/get-token`);
+  const { token } = await tokenRes.json();
+  console.log("Using token:", token);
 
-  // Spelers aanmaken
   const p1 = await fetch(`${apiUrl}/players`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name: p1Name }),
+    body: JSON.stringify({ token, name: p1Name }),
   }).then(r => r.json());
 
   const p2 = await fetch(`${apiUrl}/players`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name: p2Name }),
+    body: JSON.stringify({ token, name: p2Name }),
   }).then(r => r.json());
 
-  // Match aanmaken met naam
   await fetch(`${apiUrl}/matches`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
+      token,
       player1_id: p1.id,
       player2_id: p2.id,
       match_name: matchName
     }),
   });
 
-  modals.forEach(modal => modal.classList.remove('open'));
+  modals.forEach(modal => modal.classList.remove("open"));
   newPlayer1Input.value = "";
   newPlayer2Input.value = "";
   document.getElementById("newName").value = "";
   loadDashboard();
 };
-
     loadDashboard();
     // setInterval(loadDashboard, 5000); // elke 3 seconden live update
