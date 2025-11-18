@@ -62,6 +62,7 @@ const apiUrl = window.location.hostname === "127.0.0.1"
         }
     });
 
+
     // dropdown en buttons
     const holeDropdown = document.getElementById("holeDropdown");
     const player1Btn = document.getElementById("player1Btn");
