@@ -72,9 +72,8 @@ const apiUrl = window.location.hostname === "127.0.0.1"
 
    function displayCurrentWinner() {
     if (!holesData.length) return;
-    const player1ScoreEl = player1Btn.querySelector(".currentScore");
-    const player2ScoreEl = player2Btn.querySelector(".currentScore");
-
+    const player1ScoreEl = document.getElementById("scoreP1");
+    const player2ScoreEl = document.getElementById("scoreP2");
 
     const hole = holesData.find(h => h.hole_number === selectedHoleNumber);
 
@@ -156,9 +155,8 @@ async function handleHoleClick(winner) {
   if (winner === 1) player1Btn.classList.add("currentWinner");
   if (winner === 2) player2Btn.classList.add("currentWinner");
   if (winner === 0) drawBtn.classList.add("currentWinner");
-
-  const player1ScoreEl = player1Btn.querySelector(".currentScore");
-  const player2ScoreEl = player2Btn.querySelector(".currentScore");
+const player1ScoreEl = document.getElementById("scoreP1");
+const player2ScoreEl = document.getElementById("scoreP2");
 
   // calculate current aggregate scores (based on holesData)
   let score1 = 0, score2 = 0;
