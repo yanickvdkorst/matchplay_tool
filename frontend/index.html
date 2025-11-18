@@ -2,30 +2,41 @@
 <html lang="nl">
 <head>
   <meta charset="UTF-8">
+  <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
   <link rel="icon" type="image/png" href="favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <link rel="shortcut icon" href="favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
     <link rel="manifest" href="site.webmanifest" />
-  <title>Golf Matchplay Dashboard</title>
+  <title>CourseCast</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
   <script defer src="./script.js"></script>
 </head>
 <body>
+  <div class="wrapper">
     <div class="content home">
-        <h1>Golf Matchplay Dashboard</h1>
-          <div class="openModal"></div>
-
+        <img src="./images/logo.svg" alt="logo">
+        <div class="openModal desktop">Wedstrijd toevoegen</div>
+        <div class="openModal mobile"></div>
     </div>
   <!-- Nieuw formulier om match toe te voegen -->
   <div class="modal">
     <div class="modal-content">
+        <div class="tekst">
+          <h4 class="titel">Voeg een wedstrijd toe aan het wedstrijdschema</h4>
+          <p>Voeg een wedstrijd toe door de namen van de spelers en de wedstrijd in te vullen.</p>
+        </div>
         <div class="closeModal"></div>
-        <label>Speler 1: <input type="text" id="newPlayer1"></label>
-        <label>Speler 2: <input type="text" id="newPlayer2"></label>
-        <label>Naam: <input type="text" id="newName"></label>
-        <button id="addMatchBtn">Nieuwe wedstrijd starten</button>
+        <div class="fields">
+          <label>Naam speler 1<input type="text" id="newPlayer1"></label>
+          <label>Naam speler 2<input type="text" id="newPlayer2"></label>
+          <label>Naam wedstrijd<input type="text" id="newName"></label>
+        </div>
+        <div class="button-container">
+          <button class="closeModal ghost">Annuleren</button>
+          <button id="addMatchBtn">Toevoegen</button>
+        </div>
     </div>
   </div>
 
@@ -43,10 +54,9 @@
   
     </tbody>
   </table> -->
-  <div class="container">
     <div id="matchesBody">
-
-    </div>
+      
+    </div> 
   </div>
 </body>
 </html>

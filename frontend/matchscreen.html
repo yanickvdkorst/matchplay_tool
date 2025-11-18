@@ -2,6 +2,7 @@
 <html lang="nl">
 <head>
   <meta charset="UTF-8">
+  <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
   <link rel="icon" type="image/png" href="favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <link rel="shortcut icon" href="favicon.ico" />
@@ -14,23 +15,30 @@
   <script defer src="./matchscreen.js"></script>
 </head>
 <body>
-    <div class="desktop">
-        <a href="./index.html">Terug</a>
-        <h1>Match ID: <span id="matchIdDisplay"></span></h1>
-        <button id="deleteMatchBtn">Verwijder wedstrijd</button>
+    <div class="wrapper">
+    <div class="header">
+        <a class="terug" href="./index.html"><div class="icon"></div></a>
+         <img src="./images/logo.svg" alt="logo">
+        <button id="deleteMatchBtn"><div class="button-label">Verwijder wedstrijd</div></button>
     </div>
-    <div class="content">
-        <h2 class="top-content" id="matchName">Halve Finale</h2>
+    <div class="matchscreen content">
+        <h4 class="top-content" id="matchName">Halve Finale</h4>
         <div class="bottom-content">
-            <p id="player1Name">Speler 1</p>
-            <h2 class="vs">vs</h2>
-            <p id="player2Name">Speler 2</p>
+            <div class="player-container">
+                <p id="player1Name">Speler 1</p>
+                <p class="score">AS</p>
+            </div>
+            <p class="vs">vs</p>
+            <div class="player-container">
+                <p id="player2Name">Speler 2</p>
+                <p class="score">AS</p>
+            </div>
         </div>
     </div>
     <div class="currentHole-container">
         <div class="left">
-        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M20.0001 25.3335L10.6667 16.0002L20.0001 6.66683" stroke="#868FA2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+       <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <path d="M20 25.3334L10.6667 16L20 6.66671" stroke="#C6D1E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
 
         </div>
@@ -39,9 +47,10 @@
             <h2 class="currentHole">1</h2>
         </div>
         <div class="right">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M11.9999 6.6665L21.3333 15.9998L11.9999 25.3332" stroke="#868FA2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+       <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <path d="M12 6.66663L21.3333 16L12 25.3333" stroke="#C6D1E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
+
 
         </div>
     </div>
@@ -51,7 +60,7 @@
           <select id="holeDropdown"></select>
         </div>
         <div class="info-container">
-            <h2>Wie heeft het hole gewonnen?</h2>
+            <h3>Wie heeft het hole gewonnen?</h3>
             <p>Klik de winnaar aan om door te gaan</p>
         </div>
         <div class="winner-buttons">
@@ -61,13 +70,14 @@
         </div>
         <div id="toast" class="toast"><p class="p"></p></div>
     </div>
-
-    <div class="scorecard">
-        <h2>Scorekaart</h2>
-        
-    </div>
-        <div class="holeskaart">
+    <div class="container">
+        <div class="scorecard">
+            <p>Scorekaart</p>  
         </div>
+            <div class="holeskaart">
+            </div>          
+        </div>
+    </div>
 
 </body>
 </html>

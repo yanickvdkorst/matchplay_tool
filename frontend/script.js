@@ -115,7 +115,7 @@ async function loadDashboard() {
         kaartTop.className = "kaart-top";
 
         // matchnaam div
-        const matchNameDiv = document.createElement("p");
+        const matchNameDiv = document.createElement("h4");
         matchNameDiv.className = "match-name";
         matchNameDiv.textContent = m.match_name; // <--- hier de matchnaam
 
@@ -147,10 +147,10 @@ async function loadDashboard() {
         const player1Div = document.createElement("div");
         player1Div.className = `naam ${player1Class}`;
 
-        const player1NameH2 = document.createElement("h2");
+        const player1NameH2 = document.createElement("h4");
         player1NameH2.textContent = m.player1_name;
 
-        const player1ScoreH2 = document.createElement("h2");
+        const player1ScoreH2 = document.createElement("h4");
         player1ScoreH2.className = "score";
         player1ScoreH2.textContent = player1Score;
 
@@ -158,7 +158,7 @@ async function loadDashboard() {
         player1Div.appendChild(player1ScoreH2);
 
         // vs
-        const vsDiv = document.createElement("div");
+        const vsDiv = document.createElement("h4");
         vsDiv.className = "vs";
         vsDiv.textContent = "vs";
 
@@ -166,10 +166,10 @@ async function loadDashboard() {
         const player2Div = document.createElement("div");
         player2Div.className = `naam ${player2Class}`;
 
-        const player2NameH2 = document.createElement("h2");
+        const player2NameH2 = document.createElement("h4");
         player2NameH2.textContent = m.player2_name;
 
-        const player2ScoreH2 = document.createElement("h2");
+        const player2ScoreH2 = document.createElement("h4");
         player2ScoreH2.className = "score";
         player2ScoreH2.textContent = player2Score;
 

@@ -10,7 +10,6 @@ const apiUrl = window.location.hostname === "127.0.0.1"
 
     const urlParams = new URLSearchParams(window.location.search);
     const matchId = urlParams.get("matchId");
-    matchIdDisplay.textContent = matchId;
 
     // globale variabelen
     let player1Name = "";
