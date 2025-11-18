@@ -313,6 +313,6 @@ if (scorecardEl) {
 }
 
 function openScorecard() {
-  const kaart = document.querySelector(".holeskaart");
+  const kaart = document.querySelector(".kaart-container");
   kaart.classList.toggle("open");
 }

@@ -119,7 +119,7 @@ tbody tr:hover {
 #deleteMatchBtn                                     { flex: 1; background-color: transparent; border: none; justify-content: flex-end;}
 #deleteMatchBtn .button-label                       {width: fit-content; border: 2px solid  #3A191A; background:  #3A191A; color:white; padding: 1rem 1.5rem; border:none; border-radius:0.5rem; cursor:pointer;}
 
-.matchscreen.content                                {display: flex; margin-bottom: 1.5rem; justify-content: center; text-align: center; flex-direction: column; background-color: #19233A; padding: 1rem; border-radius: 1rem; overflow: hidden; gap: 1rem;}
+.matchscreen.content                                {display: flex; margin-bottom: 2.5rem; justify-content: center; text-align: center; flex-direction: column; background-color: #19233A; padding: 1rem; border-radius: 1rem; overflow: hidden; gap: 1rem;}
 .matchscreen.content .top-content                   {font-size: 1.5rem; color: #F9C11E; font-weight: 700; margin: 0;}
 .matchscreen.content .bottom-content                {display: flex; flex-direction: row;  gap: 1rem; align-items: center; justify-content: space-around;}
 .matchscreen.content .bottom-content .player-container  {display: flex; flex-direction: column; gap: 1rem;}
@@ -130,14 +130,14 @@ tbody tr:hover {
 
 
 
-.currentHole-container                  {background-color: #19233A; margin-bottom: 1.5rem; border-radius: 1rem; overflow: hidden; display: flex; flex-direction: row;  padding: 1.25rem 1rem ; justify-content: space-between; align-items: center; border: 1px solid #FFC619; box-shadow: 0 0 4px 1px #FFC619;}  
+.currentHole-container                  {background-color: #19233A; margin-bottom: 2.5rem; border-radius: 1rem; overflow: hidden; display: flex; flex-direction: row;  padding: 1.25rem 1rem ; justify-content: space-between; align-items: center; border: 1px solid #FFC619; box-shadow: 0 0 4px 1px #FFC619;}  
 .currentHole-container .currentHole     { color: #F9C11E;  text-align: center;} 
 .currentHole-container p                {font-size: 1rem; color: #868FA2; font-weight: 700;} 
 
 
 .header                                       {position: relative; display: flex; align-items: center; justify-content: center; gap: 2rem; margin-bottom: 2rem;}
 .header .terug .icon                          { position: relative; width: 2.5rem; height: 2.5rem; padding: .5rem; box-sizing: border-box; margin-bottom: 0;  border-radius: 2rem; border: 1px solid rgba(255, 255, 255, 0.12); background: linear-gradient(180deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.02) 100%), rgba(255, 255, 255, 0.08); box-shadow: 0 10px 24px 0 rgba(0, 0, 0, 0.25), 0 2px 6px 0 rgba(0, 0, 0, 0.10) inset; backdrop-filter: blur(6px);}
-.header img                                   {height: 2.5rem;}
+.header img                                   {width: 10rem;}
 .header .terug .icon::after                   {content: ''; display: block; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); background-image: url('./images/icon-chevron-left.svg'); background-repeat: no-repeat; background-position: center center; background-size: .875rem; width: .875rem; height: .875rem;}
 
 .header h1                             {margin-bottom: 0; flex: 1;}
@@ -145,8 +145,9 @@ tbody tr:hover {
 
 @media (max-width: 768px) {
   #deleteMatchBtn                               {display: none;}
-  .header                                   { margin-bottom: 0; padding: 1rem 0;}
-  .header .terug                           {position: absolute; left: 0;}
+  .header                                   { margin-bottom: 0; padding: 1.25rem 0; flex-direction: row-reverse;}
+  .header .terug                           {flex: 1; display: flex; justify-content: flex-end; padding: 0;}
+    .header .terug .icon::after                 {content: ''; display: block; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); background-image: url('./images/close.svg'); background-repeat: no-repeat; background-position: center center; background-size: .875rem; width: .875rem; height: .875rem;}
   .matchscreen.content .bottom-content p        {font-size: 1rem;}
 }
 
@@ -177,6 +178,7 @@ tbody tr:hover {
 .home.content .openModal                          {padding: 1rem 1.5rem; border-radius: 1rem; border: 2px solid  #19233A; background:  #19233A; font-weight: 700;}
 .home.content .openModal:hover                    {cursor: pointer; background-color: #0B1020;}
 .home.content .mobile                                           {display: none;}
+.content.home img                                               {width: 15rem;}
 
 @media (max-width: 768px) {
 .home.content .mobile                                           {display: block;}
@@ -196,7 +198,7 @@ tbody tr:hover {
 .info-container p                       {font-weight: 400;}
 .score-form .info-container p          { color: #919AAD;}
 .winner-buttons                         {display: flex; flex-direction: column; gap: 1rem; }
-.winner-buttons button                  {width: 100%; background-color: transparent; border: solid 2px #2A3751; font-size: 1rem; color: #EFEBDA; font-weight: 700; padding: 1.5rem;}
+.winner-buttons button                  {width: 100%; background-color: transparent; border: solid 2px #2A3751; font-size: 1rem; color: white; font-weight: 700; padding: 1.5rem;}
 
 .winner-buttons .currentScore             {display: none;}
 .winner-buttons .currentScore.show         { display: none; background-color: rgba(255, 255, 255, 0.2); position: absolute;  padding: .5rem;  color: white; z-index: 100;  margin-bottom: 0; font-size: 4rem;}
@@ -285,7 +287,7 @@ tbody tr:hover {
 
 #matchesBody                            {display: flex; flex-direction: column; gap: 1.5rem;}
 .kaart                                  {background-color: #19233A; border: 2px solid #2A3751; border-radius: 1rem; overflow: hidden;}
-.kaart *                                {color: #EFEBDA;}
+.kaart *                                {color: white;}
 .kaart .kaart-top                       {display: flex; flex-direction: row; justify-content: space-between; align-items: center; padding: 1rem 2rem; box-sizing: border-box; border-bottom: 1px solid  #2A3751; position: relative; background: linear-gradient(90deg,  #0B1020 0%,  #111A2C 100%);}
 .kaart .kaart-top p                     {margin: 0; color: #949DB0; font-size: 1.5rem; font-weight: 700; }
 .kaart .kaart-top .match-name            {padding-left: 3rem;}
@@ -319,14 +321,27 @@ tbody tr:hover {
 .scorecard p::after                      { content: ""; position: absolute; right: 1rem; top: 50%; transform: translateY(-50%) rotate(0deg); width: 1rem; height: 1rem; background-image: url('./images/chevron-down.svg'); background-repeat: no-repeat; background-size: contain; transition: transform 0.3s ease;}
 .scorecard.open p::after                 { transform: translateY(-50%) rotate(180deg);}
 
-.holeskaart                                    {display: none; opacity: 0; transition: all .3s ease; grid-template-columns: repeat(9,1fr);  gap: .5rem; padding: 1rem; background-color: #19233A; border-radius: .5rem;}
-.holeskaart.open                               {display: grid; opacity: 1;}
-.holeskaart .hole                              {aspect-ratio: 1 / 1; font-size: 1rem; font-weight: 700; display: flex; justify-content: center; align-items: center; border-radius: 0.5rem; border: 1px solid #2A3751;}
-.holeskaart .hole.speler-1                    {border: 1px solid #FFF; box-shadow: 0 0 4px 0 #FFF;}
-.holeskaart .hole.speler-2                    {border: 1px solid #2A3751;border: 1px solid #EEE8A9; box-shadow: 0 0 4px 0 #EEE8A9;}
-.holeskaart .hole.gelijk                      {border: 1px solid #2A3751; background-color: #232E43;}
+.kaart-container                                              { background-color: #19233A; border-radius: .5rem; display: flex; flex-direction: column-reverse;}
+.kaart-container .holeskaart                                   {display: none; opacity: 0; transition: all .3s ease; grid-template-columns: repeat(18,1fr);  gap: .5rem;  padding:1rem 2rem 2rem  2rem;}
+.kaart-container.open .holeskaart                            {display: grid; opacity: 1;}
+.kaart-container .holeskaart .hole                              {aspect-ratio: 1 / 1; font-size: 1rem; font-weight: 700; display: flex; justify-content: center; align-items: center; border-radius: 0.5rem; border: 1px solid #2A3751;}
+.kaart-container .holeskaart .hole.speler-1                    {border: 1px solid #FFF; box-shadow: 0 0 4px 0 #FFF; background-color: #fff; color: #19233A;}
+.kaart-container .holeskaart .hole.speler-2                    {border: 1px solid #EEE8A9; box-shadow: 0 0 4px 0 #EEE8A9; background-color: #EEE8A9;  color: #19233A;}
+.kaart-container .holeskaart .hole.gelijk                      {border: 1px solid #2A3751; background-color: #232E43;}
+
+.kaart-container .index                                         {display: none; flex-direction: row;  gap: 2rem; flex-wrap: wrap; padding:  2rem 2rem 1rem 2rem;}
+.kaart-container.open .index                                     {display: flex;}
+.kaart-container  .index p                                      {display: flex; flex-direction: row; gap: .5rem; align-items: center;}
+.kaart-container .index p::before                               {content: ''; display: block; width: .875rem; height: .875rem; border-radius: .25rem;}
+.kaart-container .index .p-one::before                          {border: 1px solid #FFF; box-shadow: 0 0 4px 0 #FFF; background-color: #fff; }
+.kaart-container .index .p-two::before                          {border: 1px solid #EEE8A9; box-shadow: 0 0 4px 0 #EEE8A9; background-color: #EEE8A9; }
+.kaart-container .index .draw::before                          {border: 1px solid #2A3751; background-color: #232E43;}
+
+
 
 @media (max-width: 768px) {
-  .holeskaart                                    {grid-template-columns: repeat(6,1fr); }
-  .holeskaart .hole                              {font-size: 0.625rem; }
+  .kaart-container                                                {flex-direction: column;}
+  .kaart-container .index                                         {justify-content: space-between; gap: 1rem; border-top: 1px solid #2A3751; padding: 1rem 0; margin: 0 1rem;}
+  .kaart-container .holeskaart                                    {grid-template-columns: repeat(6,1fr);  padding: 1rem; }
+  .holeskaart .hole                                               {font-size: 0.625rem; }
 }
