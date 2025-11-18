@@ -299,18 +299,25 @@ tbody tr:hover {
 .kaart .kaart-top .hole.finished p       {color: #1B2B4A;} 
 .kaart .kaart-top .hole p                {color: #FFC619; font-size: 1rem;}
 
-.kaart .kaart-bottom                    {display: flex; flex-direction: row; padding: 1.5rem 2rem; box-sizing: border-box;}
+.kaart .kaart-bottom                    {display: flex; flex-direction: column; gap: 1.5rem; padding: 1.5rem 2rem 0 1.5rem; box-sizing: border-box;}
+.kaart .kaart-bottom .bottom-top        {display: flex; flex-direction: row;}
 .kaart .kaart-bottom .naam              {display: flex; flex-direction: row; box-sizing: border-box; padding: 1.5rem; border-radius: 1rem; overflow: hidden; flex: 1; border: 2px solid #2C3953; justify-content: space-between;}
 .kaart .kaart-bottom .naam h2           {margin: 0;}
 .kaart .kaart-bottom .naam.gold         {border: 2px solid #FFC619; background-color: #30343B;}
 .kaart .kaart-bottom .naam .score       { color: #949DB0;}
 .kaart .kaart-bottom .naam.gold .score  {color: #FFC619; text-transform: uppercase;}
 .kaart .kaart-bottom .vs                {width: 5rem; display: flex; justify-content: center; align-items: center; color: #868FA2; font-size: 1.5rem; font-weight: 700;}
+.kaart .kaart-bottom .bottom-bottom     {width: 100%; display: flex; justify-content: center; border-bottom: 1px solid #2A3751;}
+.kaart .kaart-bottom .scorecard-btn     {width: fit-content; color: white; background-color: #2A3751; border-radius: 1rem 1rem 0 0; border: none; }
+.kaart .kaart-bottom .scorecard-btn::before     {content: ''; display: block; width: 1rem; height: 1rem; background-image: url('./images/chevron-down.svg'); background-size: 1rem; background-repeat: no-repeat;}
+.kaart .kaart-bottom .kaart-container   {display: none;}
+.kaart .kaart-bottom .kaart-container.open   {display: block;}
 
 @media (max-width: 768px) {
   .kaart .kaart-top                     {padding: 1.5rem 1rem; flex-wrap: wrap; gap: 1rem;}
   .kaart .kaart-top::before             {display: none;}
-  .kaart .kaart-bottom                  {flex-direction: column; gap: 1rem; padding: 1rem .75rem;}
+  .kaart .kaart-bottom                  {flex-direction: column; gap: 1.5rem; padding: 1rem .75rem 0 .75rem;}
+  .kaart .kaart-bottom .bottom-top        {display: flex; flex-direction: column; gap: 1rem;}
   .kaart .kaart-top .match-name          {padding-left: 0;}
   .kaart .kaart-bottom .vs                 {position: relative; width: 100%;}
   .kaart .kaart-bottom .vs::before          {content: '';position: absolute; left: 0; top: 50%; height: 1px; width: 35%; background-color: #2A3751;}

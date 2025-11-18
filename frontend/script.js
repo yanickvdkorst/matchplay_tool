@@ -73,11 +73,12 @@ function getCurrentHole(holes, matchOver = false) {
 }
 
 let lastDashboardState = "";
+
 async function loadDashboard(force = false) {
     const res = await fetch(`${apiUrl}/matches`);
-      const matches = await res.json();
+    const matches = await res.json();
 
-    // check verandering
+    // check of er iets veranderd is
     const newState = JSON.stringify(matches);
     if (!force && newState === lastDashboardState) return; 
     lastDashboardState = newState;
@@ -85,115 +86,144 @@ async function loadDashboard(force = false) {
     matchesBody.innerHTML = "";
 
     for (let m of matches) {
-        const holesRes = await fetch(`${apiUrl}/matches/${m.id}/score`);
-        const holes = await holesRes.json();
+    const holesRes = await fetch(`${apiUrl}/matches/${m.id}/score`);
+    const holes = await holesRes.json();
 
-        const upScore = calculateUpScore(holes);
-        const currentHole = getCurrentHole(holes, upScore.matchOver);
+    const upScore = calculateUpScore(holes);
+    const currentHole = getCurrentHole(holes, upScore.matchOver);
 
-        // kleur en score bepalen
-        let player1Class = "";
-        let player2Class = "";
-        let player1Score = "";
-        let player2Score = "";
+    let player1Class = "";
+    let player2Class = "";
+    let player1Score = "";
+    let player2Score = "";
 
-        if (upScore.player1Up === "A/S" || upScore.player2Up === "A/S") {
-            // gelijkspel -> beide spelers A/S
-            player1Score = "A/S";
-            player2Score = "A/S";
-        } else if (upScore.player1Up && upScore.player1Up !== "A/S") {
-            player1Class = "gold";
-            player1Score = upScore.player1Up;
-        } else if (upScore.player2Up && upScore.player2Up !== "A/S") {
-            player2Class = "gold";
-            player2Score = upScore.player2Up;
-        }
-
-        // kaart container
-        const card = document.createElement("div");
-        card.className = "kaart";
-        card.style.cursor = "pointer";
-        card.onclick = () => {
-            window.location.href = `matchscreen.html?matchId=${m.id}`;
-        };
-
-        // kaart-top (matchnaam + hole nummer)
-        const kaartTop = document.createElement("div");
-        kaartTop.className = "kaart-top";
-
-        // matchnaam div
-        const matchNameDiv = document.createElement("h4");
-        matchNameDiv.className = "match-name";
-        matchNameDiv.textContent = m.match_name; // <--- hier de matchnaam
-
-        // hole div
-        const holeDiv = document.createElement("div");
-        const holeText = document.createElement('p');
-        holeDiv.className = 'hole'
-        // console.log(currentHole)
-       if (currentHole === 0) {
-        holeText.textContent = `Nog niet gestart`;
-        } else if (currentHole !== 'F') {
-            holeText.textContent = `Hole ${currentHole} / 18`;
-        } else {
-            holeText.textContent = `${currentHole}`;
-            holeDiv.className = 'hole finished'   
-        }
-
-
-        // voeg toe aan kaartTop
-        holeDiv.appendChild(holeText);
-        kaartTop.appendChild(matchNameDiv);
-        kaartTop.appendChild(holeDiv);
-
-        // kaart-bottom
-        const kaartBottom = document.createElement("div");
-        kaartBottom.className = "kaart-bottom";
-
-        // speler1
-        const player1Div = document.createElement("div");
-        player1Div.className = `naam ${player1Class}`;
-
-        const player1NameH2 = document.createElement("h4");
-        player1NameH2.textContent = m.player1_name;
-
-        const player1ScoreH2 = document.createElement("h4");
-        player1ScoreH2.className = "score";
-        player1ScoreH2.textContent = player1Score;
-
-        player1Div.appendChild(player1NameH2);
-        player1Div.appendChild(player1ScoreH2);
-
-        // vs
-        const vsDiv = document.createElement("h4");
-        vsDiv.className = "vs";
-        vsDiv.textContent = "vs";
-
-        // speler2
-        const player2Div = document.createElement("div");
-        player2Div.className = `naam ${player2Class}`;
-
-        const player2NameH2 = document.createElement("h4");
-        player2NameH2.textContent = m.player2_name;
-
-        const player2ScoreH2 = document.createElement("h4");
-        player2ScoreH2.className = "score";
-        player2ScoreH2.textContent = player2Score;
-
-        player2Div.appendChild(player2NameH2);
-        player2Div.appendChild(player2ScoreH2);
-
-        // alles in kaart-bottom
-        kaartBottom.appendChild(player1Div);
-        kaartBottom.appendChild(vsDiv);
-        kaartBottom.appendChild(player2Div);
-
-        // voeg top en bottom toe aan kaart
-        card.appendChild(kaartTop);
-        card.appendChild(kaartBottom);
-
-        matchesBody.appendChild(card);
+    if (upScore.player1Up === "A/S" || upScore.player2Up === "A/S") {
+        player1Score = "A/S";
+        player2Score = "A/S";
+    } else if (upScore.player1Up && upScore.player1Up !== "A/S") {
+        player1Class = "gold";
+        player1Score = upScore.player1Up;
+    } else if (upScore.player2Up && upScore.player2Up !== "A/S") {
+        player2Class = "gold";
+        player2Score = upScore.player2Up;
     }
+
+    const card = document.createElement("div");
+    card.className = "kaart";
+    card.style.cursor = "pointer";
+    card.onclick = () => {
+        window.location.href = `matchscreen.html?matchId=${m.id}`;
+    };
+
+    const kaartTop = document.createElement("div");
+    kaartTop.className = "kaart-top";
+
+    const matchNameDiv = document.createElement("h4");
+    matchNameDiv.className = "match-name";
+    matchNameDiv.textContent = m.match_name;
+
+    const holeDiv = document.createElement("div");
+    holeDiv.className = 'hole';
+    const holeText = document.createElement("p");
+    if (currentHole === 0) holeText.textContent = "Nog niet gestart";
+    else if (currentHole !== 'F') holeText.textContent = `Hole ${currentHole} / 18`;
+    else {
+        holeText.textContent = `${currentHole}`;
+        holeDiv.classList.add("finished");
+    }
+    holeDiv.appendChild(holeText);
+
+    kaartTop.appendChild(matchNameDiv);
+    kaartTop.appendChild(holeDiv);
+
+    const kaartBottom = document.createElement("div");
+    kaartBottom.className = "kaart-bottom";
+
+    const player1Div = document.createElement("div");
+    player1Div.className = `naam ${player1Class}`;
+    const player1NameH2 = document.createElement("h4");
+    player1NameH2.textContent = m.player1_name;
+    const player1ScoreH2 = document.createElement("h4");
+    player1ScoreH2.className = "score";
+    player1ScoreH2.textContent = player1Score;
+    player1Div.appendChild(player1NameH2);
+    player1Div.appendChild(player1ScoreH2);
+
+    const vsDiv = document.createElement("h4");
+    vsDiv.className = "vs";
+    vsDiv.textContent = "vs";
+
+    const player2Div = document.createElement("div");
+    player2Div.className = `naam ${player2Class}`;
+    const player2NameH2 = document.createElement("h4");
+    player2NameH2.textContent = m.player2_name;
+    const player2ScoreH2 = document.createElement("h4");
+    player2ScoreH2.className = "score";
+    player2ScoreH2.textContent = player2Score;
+    player2Div.appendChild(player2NameH2);
+    player2Div.appendChild(player2ScoreH2);
+
+    kaartBottom.appendChild(player1Div);
+    kaartBottom.appendChild(vsDiv);
+    kaartBottom.appendChild(player2Div);
+
+    // wrapper voor namen
+const bottomTop = document.createElement("div");
+bottomTop.className = "bottom-top";
+
+bottomTop.appendChild(player1Div);
+bottomTop.appendChild(vsDiv);
+bottomTop.appendChild(player2Div);
+
+// voeg wrapper toe aan kaart-bottom
+kaartBottom.appendChild(bottomTop);
+
+    // **kaart-container per match**
+    const kaartContainer = document.createElement("div");
+    kaartContainer.className = "kaart-container"; // standaard dicht
+    const holesContainer = document.createElement("div");
+    holesContainer.className = "holeskaart";
+    kaartContainer.appendChild(holesContainer);
+
+   
+
+    // scorekaart knop met toggle
+    const scorecardBtnContainer = document.createElement("div");
+    const scorecardBtn = document.createElement("button");
+    scorecardBtn.textContent = "Scorekaart";
+    scorecardBtn.className = "scorecard-btn";
+    scorecardBtnContainer.className = 'bottom-bottom'
+    scorecardBtn.onclick = async (e) => {
+        e.stopPropagation();
+
+        // fetch en render alleen als we openen
+        if (!kaartContainer.classList.contains("open")) {
+            holesContainer.innerHTML = "";
+            const res = await fetch(`${apiUrl}/matches/${m.id}/score`);
+            const holesData = await res.json();
+
+            holesData.forEach(h => {
+                const holeDiv = document.createElement("div");
+                holeDiv.classList.add("hole");
+                holeDiv.textContent = h.hole_number;
+                if (h.winner === 1) holeDiv.classList.add("speler-1");
+                else if (h.winner === 2) holeDiv.classList.add("speler-2");
+                else if (h.winner === 0) holeDiv.classList.add("gelijk");
+                holesContainer.appendChild(holeDiv);
+            });
+        }
+
+        // toggle open class
+        kaartContainer.classList.toggle("open");
+    };
+
+    scorecardBtnContainer.appendChild(scorecardBtn);
+    kaartBottom.appendChild(scorecardBtnContainer);
+    kaartBottom.appendChild(kaartContainer);
+    card.appendChild(kaartTop);
+    card.appendChild(kaartBottom);
+    matchesBody.appendChild(card);
+}
 }
 
 addMatchBtn.onclick = async () => {
@@ -237,4 +267,4 @@ addMatchBtn.onclick = async () => {
   loadDashboard();
 };
     loadDashboard();
-    setInterval(() => loadDashboard(true), 4000);
+    // setInterval(() => loadDashboard(true), 4000);
