@@ -70,39 +70,72 @@ const apiUrl = window.location.hostname === "127.0.0.1"
     const drawBtn = document.getElementById("drawBtn");
    
 
-   function displayCurrentWinner() {
+function displayCurrentWinner() {
     if (!holesData.length) return;
+
     const player1ScoreEl = document.getElementById("scoreP1");
     const player2ScoreEl = document.getElementById("scoreP2");
 
     const hole = holesData.find(h => h.hole_number === selectedHoleNumber);
 
-    // reset alle buttons
+    // reset winner classes
     [player1Btn, player2Btn, drawBtn].forEach(btn => btn.classList.remove("currentWinner"));
 
-    // bereken score tot nu
+    // score berekenen
     let score1 = 0, score2 = 0;
     holesData.forEach(h => {
         if (h.winner === 1) score1++;
         if (h.winner === 2) score2++;
     });
-    const diff = score1 - score2;
 
-    // update score-divs
-    // update score-divs
+    const diff = score1 - score2;
+    const holesPlayed = holesData.filter(h => h.winner !== null).length;
+    const totalHoles = 18; // pas aan als het anders is
+    const remainingHoles = totalHoles - holesPlayed;
+
+    // --- MATCH STATUS LOGICA ---
+    let p1Text = "";
+    let p2Text = "";
+
     if (diff > 0) {
-        player1ScoreEl.textContent = diff + "UP";
-        player2ScoreEl.textContent = "";
-    } else if (diff < 0) {
-        player1ScoreEl.textContent = "";
-        player2ScoreEl.textContent = -diff + "UP";
-    } else {
-        // gelijkspel
-        player1ScoreEl.textContent = "A/S";
-        player2ScoreEl.textContent = "A/S";
+        // speler 1 voor
+        if (diff > remainingHoles) {
+            p1Text = `${diff}&${remainingHoles}`;
+            p2Text = "";
+        } else {
+            p1Text = `${diff}UP`;
+            p2Text = "";
+        }
+    } 
+    else if (diff < 0) {
+        // speler 2 voor
+        if (-diff > remainingHoles) {
+            p1Text = "";
+            p2Text = `${-diff}&${remainingHoles}`;
+        } else {
+            p1Text = "";
+            p2Text = `${-diff}UP`;
+        }
+    } 
+    else {
+        // all square
+        p1Text = "A/S";
+        p2Text = "A/S";
     }
 
-    // voeg class toe aan de huidige winner van de hole
+    // update UI
+    player1ScoreEl.textContent = p1Text;
+    player2ScoreEl.textContent = p2Text;
+
+    // reset eerst eventueel de class
+    player1ScoreEl.classList.remove("as");
+    player2ScoreEl.classList.remove("as");
+
+    // voeg class toe als het A/S is
+    if (p1Text === "A/S") player1ScoreEl.classList.add("as");
+    if (p2Text === "A/S") player2ScoreEl.classList.add("as");
+
+    // hole highlight
     if (hole.winner === 1) player1Btn.classList.add("currentWinner");
     if (hole.winner === 2) player2Btn.classList.add("currentWinner");
     if (hole.winner === 0) drawBtn.classList.add("currentWinner");
@@ -112,17 +145,20 @@ player1Btn.addEventListener("click", () => handleHoleClick(1));
 player2Btn.addEventListener("click", () => handleHoleClick(2));
 drawBtn.addEventListener("click", () => handleHoleClick(0));
 
-    async function loadHoles() {
-        const res = await fetch(`${apiUrl}/matches/${matchId}/score`);
-        holesData = await res.json();
+async function loadHoles(force = false) {
+    const res = await fetch(`${apiUrl}/matches/${matchId}/score`);
+    const newData = await res.json();
 
-        // bepaal eerste hole die nog geen winner heeft
-       // laat de huidige geselecteerde hole staan
-    holeDropdown.value = selectedHoleNumber;
+    // vergelijk data
+    if (!force && JSON.stringify(newData) === JSON.stringify(holesData)) {
+        return; // niks veranderd → niet rerenderen
+    }
 
-        displayCurrentWinner();
-          renderHoles(); // voeg deze regel toe
-        }
+    holesData = newData;
+
+    renderHoles();
+    displayCurrentWinner();
+}
 
   async function updateHole(holeNumber, winner) {
     await fetch(`${apiUrl}/matches/${matchId}/holes/${holeNumber}`, {
@@ -319,3 +355,7 @@ function openScorecard() {
   const kaart = document.querySelector(".kaart-container");
   kaart.classList.toggle("open");
 }
+
+setInterval(() => {
+    loadHoles();
+}, 1500); // elke 1.5 sec

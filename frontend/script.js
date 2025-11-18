@@ -72,9 +72,16 @@ function getCurrentHole(holes, matchOver = false) {
     }
 }
 
-async function loadDashboard() {
+let lastDashboardState = "";
+async function loadDashboard(force = false) {
     const res = await fetch(`${apiUrl}/matches`);
-    const matches = await res.json();
+      const matches = await res.json();
+
+    // check verandering
+    const newState = JSON.stringify(matches);
+    if (!force && newState === lastDashboardState) return; 
+    lastDashboardState = newState;
+
     matchesBody.innerHTML = "";
 
     for (let m of matches) {
@@ -230,4 +237,4 @@ addMatchBtn.onclick = async () => {
   loadDashboard();
 };
     loadDashboard();
-    // setInterval(loadDashboard, 5000); // elke 3 seconden live update
+    setInterval(() => loadDashboard(true), 4000);
