@@ -14,7 +14,7 @@ h3                  { font-size: 2rem; font-style: normal; font-weight: 700; lin
 h4                  { font-size: 1.5rem; font-style: normal; font-weight: 700; line-height: normal; margin: 0; color: white; }
 p                   { font-size: 1rem; font-style: normal; font-weight: 700; line-height: normal; margin: 0; color: white; }
 label               {font-size: 0.875rem; font-style: normal; font-weight: 700; line-height: normal; margin: 0; text-transform: uppercase; color: white;}
-.footnote           {font-size: 0.625rem; font-style: normal; font-weight: 700; line-height: normal; margin: 0; color: white;}
+.footnote           {font-size: 0.875rem; font-style: normal; font-weight: 700; line-height: normal; margin: 0; color: white;}
 
 
 @media (max-width: 768px) {
@@ -22,6 +22,7 @@ label               {font-size: 0.875rem; font-style: normal; font-weight: 700; 
   h2                  { font-size: 1.75rem;  }
   h3                  { font-size: 1.5rem;  }
   h4                  { font-size: 1.25rem;  }
+  .footnote           {font-size: 0.625rem;}
 }
 
 .titel            {margin-bottom: 1rem;}
@@ -341,7 +342,7 @@ tbody tr:hover {
 
 @media (max-width: 768px) {
   .kaart-container                                                {flex-direction: column;}
-  .kaart-container .index                                         {justify-content: space-between; gap: 1rem; border-top: 1px solid #2A3751; padding: 1rem 0; margin: 0 1rem;}
+  .kaart-container .index                                         { gap: 1rem; border-top: 1px solid #2A3751; padding: 1rem 0; margin: 0 1rem;}
   .kaart-container .holeskaart                                    {grid-template-columns: repeat(6,1fr);  padding: 1rem; }
   .holeskaart .hole                                               {font-size: 0.625rem; }
 }

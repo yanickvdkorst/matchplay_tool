@@ -4,6 +4,8 @@ const apiUrl = window.location.hostname === "127.0.0.1"
   
     const matchIdDisplay = document.getElementById("matchIdDisplay");
     const player1El = document.getElementById("player1Name");
+    const player1ElIndex = document.getElementById("player1NameIndex");
+    const player2ElIndex = document.getElementById("player2NameIndex");
     const player2El = document.getElementById("player2Name");
     const matchNameEl = document.getElementById("matchName");
     let matchOver = false;
@@ -26,6 +28,8 @@ const apiUrl = window.location.hostname === "127.0.0.1"
       if (match) {
           player1El.textContent = match.player1_name;
           player2El.textContent = match.player2_name;
+          player1ElIndex.textContent = match.player1_name;
+          player2ElIndex.textContent = match.player2_name;
           matchNameEl.textContent = match.match_name;
           player1Name = match.player1_name;
           player2Name = match.player2_name;
