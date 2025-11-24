@@ -354,3 +354,7 @@ tbody tr:hover {
   .kaart-container .holeskaart                                    {grid-template-columns: repeat(6,1fr);  padding: 1rem; }
   .holeskaart .hole                                               {font-size: 0.625rem; }
 }
+
+
+.loader                                                           {display: block;}
+.loader.hidden                                                    {display: none;}

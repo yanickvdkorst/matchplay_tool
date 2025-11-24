@@ -19,12 +19,19 @@ const newMatchNameInput = document.getElementById("newName");
 const modals = document.querySelectorAll(".modal");
 const openModalBtns = document.querySelectorAll(".openModal");
 const closeModalBtns = document.querySelectorAll(".closeModal");
+const dashboardLoader = document.getElementById("dashboardLoader");
 
 let lastDashboardState = "";
+
 
 // ----------------------------
 // 3. UTILS
 // ----------------------------
+function setLoading(isLoading) {
+  if (!dashboardLoader) return;
+  dashboardLoader.classList.toggle("hidden", !isLoading);
+}
+
 function calculateUpScore(holes) {
   let score1 = 0;
   let score2 = 0;
@@ -193,6 +200,7 @@ function renderMatchCard(match, holes) {
 // ----------------------------
 async function loadDashboard(force = false) {
   try {
+    setLoading(true); // show loader
     const matches = await apiGet("/matches");
     if (!Array.isArray(matches)) return;
 
@@ -209,6 +217,8 @@ async function loadDashboard(force = false) {
     }
   } catch (err) {
     console.warn("API tijdelijk niet bereikbaar", err);
+  } finally {
+    setLoading(false); // hide loader
   }
 }
 
@@ -226,24 +236,32 @@ addMatchBtn.onclick = async () => {
 
   if (!p1 || !p2 || !matchName) return alert("Vul alle velden in");
 
-  const { token } = await apiGet("/api/get-token");
+  try {
+    setLoading(true);
 
-  const player1 = await apiPost("/players", { token, name: p1 });
-  const player2 = await apiPost("/players", { token, name: p2 });
+    const { token } = await apiGet("/api/get-token");
+    const player1 = await apiPost("/players", { token, name: p1 });
+    const player2 = await apiPost("/players", { token, name: p2 });
 
-  await apiPost("/matches", {
-    token,
-    player1_id: player1.id,
-    player2_id: player2.id,
-    match_name: matchName
-  });
+    await apiPost("/matches", {
+      token,
+      player1_id: player1.id,
+      player2_id: player2.id,
+      match_name: matchName
+    });
 
-  modals.forEach(m => m.classList.remove("open"));
-  newPlayer1Input.value = "";
-  newPlayer2Input.value = "";
-  newMatchNameInput.value = "";
+    modals.forEach(m => m.classList.remove("open"));
+    newPlayer1Input.value = "";
+    newPlayer2Input.value = "";
+    newMatchNameInput.value = "";
 
-  loadDashboard(true);
+    await loadDashboard(true);
+  } catch (err) {
+    console.error(err);
+    alert("Er is iets misgegaan tijdens het toevoegen van de match.");
+  } finally {
+    setLoading(false);
+  }
 };
 
 // ----------------------------
