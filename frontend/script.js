@@ -168,17 +168,20 @@ function renderMatchCard(match, holes) {
   const bottom = document.createElement("div");
   bottom.className = "kaart-bottom";
 
-  const p1 = document.createElement("div");
-  p1.className = `naam ${up.p1 && up.p1 !== "A/S" ? "gold" : ""}`;
-  p1.innerHTML = `<h4>${match.player1_name}</h4><h4 class="score">${up.p1}</h4>`;
+const p1 = document.createElement("div");
+p1.className = "naam";
+if (up.p1 && up.p1 !== "A/S" && up.p1 !== "") p1.classList.add("gold");
+p1.innerHTML = `<h4>${match.player1_name}</h4><h4 class="score">${up.p1}</h4>`;
 
-  const vs = document.createElement("h4");
-  vs.className = "vs";
-  vs.textContent = "vs";
 
-  const p2 = document.createElement("div");
-  p2.className = `naam ${up.p2 && up.p2 !== "A/S" ? "gold" : ""}`;
-  p2.innerHTML = `<h4>${match.player2_name}</h4><h4 class="score">${up.p2}</h4>`;
+const vs = document.createElement("h4");
+vs.className = "vs";
+vs.textContent = "vs";
+
+const p2 = document.createElement("div");
+p2.className = "naam";
+if (up.p2 && up.p2 !== "A/S" && up.p2 !== "") p2.classList.add("gold");
+p2.innerHTML = `<h4>${match.player2_name}</h4><h4 class="score">${up.p2}</h4>`;
 
   const namesWrapper = document.createElement("div");
   namesWrapper.className = "bottom-top";
@@ -247,6 +250,19 @@ function updateMatchCard(card, match, holes) {
   const p2ScoreEl = card.querySelector(".bottom-top .naam:nth-child(3) .score");
   if (p1ScoreEl) p1ScoreEl.textContent = up.p1;
   if (p2ScoreEl) p2ScoreEl.textContent = up.p2;
+
+  const p1Div = card.querySelector(".bottom-top .naam:nth-child(1)");
+    const p2Div = card.querySelector(".bottom-top .naam:nth-child(3)");
+
+    if (p1Div) {
+    p1Div.querySelector(".score").textContent = up.p1;
+    p1Div.classList.toggle("gold", up.p1 && up.p1 !== "A/S" && up.p1 !== "");
+    }
+
+    if (p2Div) {
+    p2Div.querySelector(".score").textContent = up.p2;
+    p2Div.classList.toggle("gold", up.p2 && up.p2 !== "A/S" && up.p2 !== "");
+    }
 
   // update current hole
   const holeDiv = card.querySelector(".kaart-top .hole p");
