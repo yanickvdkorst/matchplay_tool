@@ -35,7 +35,7 @@ function setLoading(isLoading) {
     // start een timeout van 3 seconden voordat de loader getoond wordt
     loaderTimeout = setTimeout(() => {
       dashboardLoader.classList.remove("hidden");
-    }, 3000);
+    }, 1000);
   } else {
     // data is binnen, clear timeout en verberg loader
     clearTimeout(loaderTimeout);
@@ -305,8 +305,11 @@ addMatchBtn.onclick = async () => {
   if (!p1 || !p2 || !matchName) return alert("Vul alle velden in");
 
   try {
+    // 1. zet loading zichtbaar
     setLoading(true);
+    addMatchBtn.disabled = true; // ook button locken
 
+    // 2. call API's
     const { token } = await apiGet("/api/get-token");
     const player1 = await apiPost("/players", { token, name: p1 });
     const player2 = await apiPost("/players", { token, name: p2 });
@@ -318,20 +321,24 @@ addMatchBtn.onclick = async () => {
       match_name: matchName
     });
 
+    // 3. reset form en close modal
     modals.forEach(m => m.classList.remove("open"));
     newPlayer1Input.value = "";
     newPlayer2Input.value = "";
     newMatchNameInput.value = "";
 
+    // 4. herlaad dashboard
     await loadDashboard(true);
+
   } catch (err) {
     console.error(err);
     alert("Er is iets misgegaan tijdens het toevoegen van de match.");
   } finally {
+    // 5. hide loading
     setLoading(false);
+    addMatchBtn.disabled = false; // button unlocken
   }
 };
-
 // ----------------------------
 // 8. INIT
 // ----------------------------
