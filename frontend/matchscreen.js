@@ -38,6 +38,7 @@ let player2Name = "";
 let matchName = "";
 let holesData = [];
 let selectedHoleNumber = 1;
+let holeDivMap = new Map();
 
 // ----------------------------
 // 4. UTILS
@@ -114,29 +115,36 @@ async function deleteMatch() {
 // ----------------------------
 // 6. RENDERING
 // ----------------------------
-function renderHoles() {
+function renderHolesInitial() {
   if (!holesData.length || !kaartContainer) return;
   kaartContainer.innerHTML = "";
+  holeDivMap.clear();
 
   holesData.forEach(h => {
     const holeDiv = document.createElement("div");
     holeDiv.classList.add("hole");
     holeDiv.textContent = h.hole_number;
 
-    if (h.winner === 1) holeDiv.classList.add("speler-1");
-    else if (h.winner === 2) holeDiv.classList.add("speler-2");
-    else if (h.winner === 0) holeDiv.classList.add("gelijk");
-
-    if (h.hole_number === selectedHoleNumber) holeDiv.classList.add("selected-hole");
-
     holeDiv.addEventListener("click", () => {
       selectedHoleNumber = h.hole_number;
       updateHoleDisplay();
-      renderHoles();
+      highlightSelectedHole();
     });
 
     kaartContainer.appendChild(holeDiv);
+    holeDivMap.set(h.hole_number, holeDiv);
+
+    updateHoleDivClass(holeDiv, h);
   });
+}
+
+function updateHoleDivClass(holeDiv, holeData) {
+  holeDiv.classList.remove("speler-1", "speler-2", "gelijk", "selected-hole");
+  if (holeData.winner === 1) holeDiv.classList.add("speler-1");
+  else if (holeData.winner === 2) holeDiv.classList.add("speler-2");
+  else if (holeData.winner === 0) holeDiv.classList.add("gelijk");
+
+  if (holeData.hole_number === selectedHoleNumber) holeDiv.classList.add("selected-hole");
 }
 
 function updateHoleDisplay() {
@@ -219,7 +227,7 @@ async function handleHoleClick(winner) {
     return;
   }
 
-  renderHoles();
+  renderHolesInitial();
   displayCurrentWinner();
 
   // auto-advance
@@ -232,7 +240,7 @@ async function handleHoleClick(winner) {
     setTimeout(() => {
       selectedHoleNumber++;
       updateHoleDisplay();
-      renderHoles();
+      renderHolesInitial();
     }, 800);
   }
 }
@@ -261,16 +269,21 @@ async function handleHoleClick(winner) {
 
   // eerste load
   holesData = await fetchHoles();
-  renderHoles();
+  renderHolesInitial();
   displayCurrentWinner();
 
   // periodic refresh
-  setInterval(async () => {
-    const newHoles = await fetchHoles();
-    if (JSON.stringify(newHoles) !== JSON.stringify(holesData)) {
-      holesData = newHoles;
-      renderHoles();
-      displayCurrentWinner();
+setInterval(async () => {
+  const newHoles = await fetchHoles();
+
+  newHoles.forEach((h, i) => {
+    if (!holesData[i] || holesData[i].winner !== h.winner) {
+      holesData[i] = h;
+      const holeDiv = holeDivMap.get(h.hole_number);
+      if (holeDiv) updateHoleDivClass(holeDiv, h);
     }
-  }, 1500);
+  });
+
+  displayCurrentWinner(); 
+}, 1500);
 })();
