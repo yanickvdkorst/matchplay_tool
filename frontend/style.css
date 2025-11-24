@@ -358,3 +358,9 @@ tbody tr:hover {
 
 .loader                                                           {display: block;}
 .loader.hidden                                                    {display: none;}
+.cf-turnstile {
+  width: 100% !important; /* forceer volle breedte */
+  height: 4rem !important;
+  border-radius: 1rem;
+  overflow: hidden; /* zodat border-radius ook voor iframe werkt */
+}
