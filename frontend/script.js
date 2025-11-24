@@ -42,6 +42,22 @@ function setLoading(isLoading) {
     dashboardLoader.classList.add("hidden");
   }
 }
+
+// Cloudflare
+ function onTurnstileSuccess(token) {
+    console.log("Turnstile success:", token);
+    document.getElementById("addMatchBtn").disabled = false;
+  }
+  function onTurnstileError(errorCode) {
+    console.error("Turnstile error:", errorCode);
+    document.getElementById("addMatchBtn").disabled = true;
+  }
+  function onTurnstileExpired() {
+    console.warn("Turnstile token expired");
+    document.getElementById("addMatchBtn").disabled = true;
+  }
+
+
 function calculateUpScore(holes) {
   let score1 = 0;
   let score2 = 0;
