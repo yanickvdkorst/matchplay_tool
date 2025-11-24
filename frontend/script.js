@@ -22,6 +22,7 @@ const closeModalBtns = document.querySelectorAll(".closeModal");
 const dashboardLoader = document.getElementById("dashboardLoader");
 
 let lastDashboardState = "";
+let loaderTimeout;
 
 
 // ----------------------------
@@ -29,9 +30,18 @@ let lastDashboardState = "";
 // ----------------------------
 function setLoading(isLoading) {
   if (!dashboardLoader) return;
-  dashboardLoader.classList.toggle("hidden", !isLoading);
-}
 
+  if (isLoading) {
+    // start een timeout van 3 seconden voordat de loader getoond wordt
+    loaderTimeout = setTimeout(() => {
+      dashboardLoader.classList.remove("hidden");
+    }, 3000);
+  } else {
+    // data is binnen, clear timeout en verberg loader
+    clearTimeout(loaderTimeout);
+    dashboardLoader.classList.add("hidden");
+  }
+}
 function calculateUpScore(holes) {
   let score1 = 0;
   let score2 = 0;
@@ -198,28 +208,57 @@ function renderMatchCard(match, holes) {
 // ----------------------------
 // 6. DASHBOARD LOGICA
 // ----------------------------
+const matchCardsMap = new Map(); // matchId -> card element
+
 async function loadDashboard(force = false) {
   try {
-    setLoading(true); // show loader
+    setLoading(true);
+
     const matches = await apiGet("/matches");
     if (!Array.isArray(matches)) return;
 
-    const newState = JSON.stringify(matches);
-    if (!force && newState === lastDashboardState) return;
-    lastDashboardState = newState;
-
-    matchesBody.innerHTML = "";
-
     for (let m of matches) {
       const holes = await apiGet(`/matches/${m.id}/score`);
-      const card = renderMatchCard(m, holes);
-      matchesBody.appendChild(card);
+
+      if (matchCardsMap.has(m.id)) {
+        // update bestaande kaart
+        updateMatchCard(matchCardsMap.get(m.id), m, holes);
+      } else {
+        // nieuwe kaart maken
+        const card = renderMatchCard(m, holes);
+        matchesBody.appendChild(card);
+        matchCardsMap.set(m.id, card);
+      }
     }
   } catch (err) {
     console.warn("API tijdelijk niet bereikbaar", err);
   } finally {
-    setLoading(false); // hide loader
+    setLoading(false);
   }
+}
+
+// update alleen de score en hole tekst
+function updateMatchCard(card, match, holes) {
+  const up = calculateUpScore(holes);
+  const hole = getCurrentHole(holes, up.end);
+
+  // update score
+  const p1ScoreEl = card.querySelector(".bottom-top .naam:nth-child(1) .score");
+  const p2ScoreEl = card.querySelector(".bottom-top .naam:nth-child(3) .score");
+  if (p1ScoreEl) p1ScoreEl.textContent = up.p1;
+  if (p2ScoreEl) p2ScoreEl.textContent = up.p2;
+
+  // update current hole
+  const holeDiv = card.querySelector(".kaart-top .hole p");
+  if (holeDiv) {
+    if (hole === 0) holeDiv.textContent = "Nog niet gestart";
+    else if (hole !== "F") holeDiv.textContent = `Hole ${hole} / 18`;
+    else holeDiv.textContent = "F";
+  }
+
+  // eventueel finished class togglen
+  const holeWrapper = card.querySelector(".kaart-top .hole");
+  if (holeWrapper) holeWrapper.classList.toggle("finished", hole === "F");
 }
 
 // ----------------------------
@@ -270,3 +309,5 @@ addMatchBtn.onclick = async () => {
 window.addEventListener("DOMContentLoaded", () => {
   loadDashboard(true);
 });
+
+setInterval(() => loadDashboard(), 3000);
