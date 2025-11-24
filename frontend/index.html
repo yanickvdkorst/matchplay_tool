@@ -49,8 +49,7 @@ gtag('config', 'G-8W5YF9G6KH');
           <label>Naam speler 1<input type="text" id="newPlayer1"></label>
           <label>Naam speler 2<input type="text" id="newPlayer2"></label>
           <label>Naam wedstrijd<input type="text" id="newName"></label>
-          <div class="cf-turnstile" data-sitekey="0x4AAAAAACCog3TfVfOy3bre" data-theme="light" data-size="normal" data-callback="onSuccess"></div>
-        </div>
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAACCog3TfVfOy3bre" data-theme="light" data-size="normal" data-callback="onTurnstileSuccess" data-error-callback="onTurnstileError" data-expired-callback="onTurnstileExpired"></div>        </div>
         <div class="button-container">
           <button class="closeModal ghost">Annuleren</button>
           <button id="addMatchBtn" disabled>Toevoegen</button>
