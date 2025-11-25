@@ -35,7 +35,7 @@ function setLoading(isLoading) {
     // start een timeout van 3 seconden voordat de loader getoond wordt
     loaderTimeout = setTimeout(() => {
       dashboardLoader.classList.remove("hidden");
-    }, 1000);
+    }, 3000);
   } else {
     // data is binnen, clear timeout en verberg loader
     clearTimeout(loaderTimeout);
