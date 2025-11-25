@@ -363,8 +363,11 @@ tbody tr:hover {
   background: rgba(255,255,255,0.6);
   display: flex;
   justify-content: center;
+  text-align: center;
   align-items: center;
   z-index: 9999;
+  gap: 2rem;
+  flex-direction: column;
 }
 #dashboardLoader.hidden { display: none; }
 .spinner {
