@@ -119,6 +119,9 @@ tbody tr:hover {
 
 #deleteMatchBtn                                     { flex: 1; background-color: transparent; border: none; justify-content: flex-end;}
 #deleteMatchBtn .button-label                       {width: fit-content; border: 2px solid  #3A191A; background:  #3A191A; color:white; padding: 1rem 1.5rem; border:none; border-radius:0.5rem; cursor:pointer;}
+#deleteMatchBtn.mobile                              {display: none;}      
+
+
 
 .matchscreen.content                                {display: flex; margin-bottom: 2.5rem; justify-content: center; text-align: center; flex-direction: column; background-color: #19233A; padding: 1rem; border-radius: 1rem; overflow: hidden; gap: 1rem;}
 .matchscreen.content .top-content                   {font-size: 1.5rem; color: #F9C11E; font-weight: 700; margin: 0;}
@@ -148,9 +151,16 @@ tbody tr:hover {
 @media (max-width: 768px) {
   #deleteMatchBtn                               {display: none;}
   .header                                   { margin-bottom: 0; padding: 1.25rem 0; flex-direction: row-reverse;}
-  .header .terug                           {flex: 1; display: flex; justify-content: flex-end; padding: 0;}
+  .header .terug                           { padding: 0; flex: unset;}
     .header .terug .icon::after                 {content: ''; display: block; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); background-image: url('./images/close.svg'); background-repeat: no-repeat; background-position: center center; background-size: .875rem; width: .875rem; height: .875rem;}
   .matchscreen.content .bottom-content p        {font-size: 1rem;}
+
+
+  #deleteMatchBtn.desktop                              {display: none;}  
+  #deleteMatchBtn.mobile                              {display: block; flex: unset; position: relative; width: 2.5rem; height: 2.5rem; padding: .5rem; box-sizing: border-box; margin-bottom: 0;  border-radius: 2rem; border: 1px solid rgba(255, 255, 255, 0.12); background: linear-gradient(180deg,  rgba(58, 25, 26, 0.10) 0%, rgba(255, 255, 255, 0.00) 100%), #3A191A; box-shadow: 0 10px 24px 0 rgba(0, 0, 0, 0.25), 0 2px 6px 0 rgba(0, 0, 0, 0.10) inset; backdrop-filter: blur(6px);}      
+  #deleteMatchBtn.mobile::after                   {content: ''; display: block; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); background-image: url('./images/icon-trashcan.svg'); background-repeat: no-repeat; background-position: center center; background-size: .875rem; width: .875rem; height: .875rem;}
+
+  .button-container                                   {flex: 1; display: flex; gap: 1rem; justify-content: flex-end;}
 }
 
 
