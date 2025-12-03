@@ -22,6 +22,8 @@ const holeDropdown = document.getElementById("holeDropdown");
 const player1Btn = document.getElementById("player1Btn");
 const player2Btn = document.getElementById("player2Btn");
 const drawBtn = document.getElementById("drawBtn");
+const menuToggle = document.querySelector(".toggle-menu");
+const dropdown = document.querySelector('.dropdown');
 
 const prevHoleBtn = document.querySelector(".currentHole-container .left");
 const nextHoleBtn = document.querySelector(".currentHole-container .right");
@@ -202,6 +204,11 @@ deleteMatchBtn.forEach(btn => {
     }
   });
 });
+
+menuToggle.addEventListener("click", () => {
+  dropdown.classList.toggle("hidden");
+  menuToggle.classList.toggle("open");
+})
 
 // ----------------------------
 // 8. LOGIC / HANDLERS

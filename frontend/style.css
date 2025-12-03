@@ -152,7 +152,8 @@ tbody tr:hover {
   #deleteMatchBtn                               {display: none;}
   .header                                   { margin-bottom: 0; padding: 1.25rem 0; flex-direction: row-reverse;}
   .header .terug                           { padding: 0; flex: unset;}
-    .header .terug .icon::after                 {content: ''; display: block; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); background-image: url('./images/close.svg'); background-repeat: no-repeat; background-position: center center; background-size: .875rem; width: .875rem; height: .875rem;}
+  .header .terug .icon                          {backdrop-filter: blur(100px);}
+    .header .terug .icon::after                 {content: ''; display: block; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); background-image: url('./images/home.svg'); background-repeat: no-repeat; background-position: center center; background-size: 1.5rem; width: 1rem; height: 1rem; }
   .matchscreen.content .bottom-content p        {font-size: 1rem;}
 
 
@@ -161,6 +162,13 @@ tbody tr:hover {
   #deleteMatchBtn.mobile::after                   {content: ''; display: block; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); background-image: url('./images/icon-trashcan.svg'); background-repeat: no-repeat; background-position: center center; background-size: .875rem; width: .875rem; height: .875rem;}
 
   .button-container                                   {flex: 1; display: flex; gap: 1rem; justify-content: flex-end;}
+
+  .dropdown                                         {position: absolute; display: flex; flex-direction: column; gap: .5rem; top: 100%;}
+  .dropdown.hidden                                  {display: none;}
+  .toggle-menu                                 {padding: 0;  position: relative; width: 2.5rem; height: 2.5rem; padding: .5rem; box-sizing: border-box; margin-bottom: 0;  border-radius: 2rem; border: 1px solid rgba(255, 255, 255, 0.12); background: linear-gradient(180deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.02) 100%), rgba(255, 255, 255, 0.08); box-shadow: 0 10px 24px 0 rgba(0, 0, 0, 0.25), 0 2px 6px 0 rgba(0, 0, 0, 0.10) inset; backdrop-filter: blur(6px);}
+  .toggle-menu::after                 {content: ''; display: block; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); background-image: url('./images/dots.svg'); background-repeat: no-repeat; background-position: center center; background-size: 1rem; width: .875rem; height: .875rem;}
+  .toggle-menu.open::after            {background-image: url('./images/chevron-up.svg');}
+
 }
 
 
@@ -177,6 +185,7 @@ tbody tr:hover {
 .modal .modal-content .button-container button        {flex: 1;}
 .modal .modal-content .button-container .closeModal.ghost  {position: relative; background-color: transparent;}
 .modal .modal-content .button-container .closeModal.ghost:hover  {background-color: #FFC619; }
+.cf-turnstile                                     {margin-top:  1rem;}
 #addMatchBtn                                      { color: white; }
 #addMatchBtn:hover                                {background-color: #FFC619; color: white; box-shadow: 0 0 4px 1px #FFC619;}
 
