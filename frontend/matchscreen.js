@@ -17,7 +17,7 @@ const player1ElIndex = document.getElementById("player1NameIndex");
 const player2ElIndex = document.getElementById("player2NameIndex");
 const matchNameEl = document.getElementById("matchName");
 
-const deleteMatchBtn = document.getElementById("deleteMatchBtn");
+const deleteMatchBtn = document.querySelectorAll(".deleteMatchBtn");
 const holeDropdown = document.getElementById("holeDropdown");
 const player1Btn = document.getElementById("player1Btn");
 const player2Btn = document.getElementById("player2Btn");
@@ -189,15 +189,18 @@ if (scorecardEl) scorecardEl.addEventListener("click", () => {
   scorecardEl.classList.toggle("open");
 });
 
-deleteMatchBtn.addEventListener("click", async () => {
-  if (!confirm("Weet je zeker dat je deze match wilt verwijderen?")) return;
-  try {
-    await deleteMatch();
-    alert("Match verwijderd!");
-    window.location.href = "./index.html";
-  } catch (err) {
-    alert(err.message);
-  }
+deleteMatchBtn.forEach(btn => {
+  btn.addEventListener("click", async () => {
+    if (!confirm("Weet je zeker dat je deze match wilt verwijderen?")) return;
+
+    try {
+      await deleteMatch(); 
+      alert("Match verwijderd!");
+      window.location.href = "./index.html";
+    } catch (err) {
+      alert(err.message);
+    }
+  });
 });
 
 // ----------------------------
