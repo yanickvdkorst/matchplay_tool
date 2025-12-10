@@ -230,19 +230,23 @@ async function loadDashboard(force = false) {
   try {
     setLoading(true);
 
-    const matches = await apiGet("/matches");
+    let matches = await apiGet("/matches");
     if (!Array.isArray(matches)) return;
+
+    // nieuwste eerst
+    matches.sort((a, b) => b.id - a.id);
 
     for (let m of matches) {
       const holes = await apiGet(`/matches/${m.id}/score`);
 
       if (matchCardsMap.has(m.id)) {
-        // update bestaande kaart
         updateMatchCard(matchCardsMap.get(m.id), m, holes);
       } else {
-        // nieuwe kaart maken
         const card = renderMatchCard(m, holes);
-        matchesBody.appendChild(card);
+
+        // prepend ipv append → zet nieuwe kaarten bovenaan
+        matchesBody.prepend(card);
+
         matchCardsMap.set(m.id, card);
       }
     }
