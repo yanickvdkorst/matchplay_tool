@@ -142,7 +142,8 @@ tbody tr:hover {
 
 .header                                       {position: relative; display: flex; align-items: center; justify-content: center; gap: 2rem; margin-bottom: 2rem;}
 .header .terug .icon                          { position: relative; width: 2.5rem; height: 2.5rem; padding: .5rem; box-sizing: border-box; margin-bottom: 0;  border-radius: 2rem; border: 1px solid rgba(255, 255, 255, 0.12); background: linear-gradient(180deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.02) 100%), rgba(255, 255, 255, 0.08); box-shadow: 0 10px 24px 0 rgba(0, 0, 0, 0.25), 0 2px 6px 0 rgba(0, 0, 0, 0.10) inset; backdrop-filter: blur(6px);}
-.header img                                   {width: 10rem;}
+.header img                                   {width: 15rem;}
+.content a:hover                               {background-color: transparent;}
 .header .terug .icon::after                   {content: ''; display: block; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); background-image: url('./images/icon-chevron-left.svg'); background-repeat: no-repeat; background-position: center center; background-size: .875rem; width: .875rem; height: .875rem;}
 
 .header h1                             {margin-bottom: 0; flex: 1;}
@@ -150,6 +151,7 @@ tbody tr:hover {
 .button-container.mobile             {display: none;}
 
 @media (max-width: 768px) {
+  .header img                                   {width: 10rem;}
   #deleteMatchBtn                               {display: none;}
   .button-container.mobile             {display: flex;}
   .header                                   { margin-bottom: 0; padding: 1.25rem 0; flex-direction: row-reverse;}
@@ -171,14 +173,14 @@ tbody tr:hover {
   .toggle-menu::after                         {content: ''; display: block; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); background-image: url('./images/dots.svg'); background-repeat: no-repeat; background-position: center center; background-size: 1rem; width: 1rem; height: 1rem;  transition: all .3s ease;}
   .toggle-menu.open::after                    {background-image: url('./images/close.svg');  transition: all .3s ease;}
 
-    .adjust                                {padding: 0;  position: relative; width: 2.5rem; height: 2.5rem; padding: .5rem; box-sizing: border-box; margin-bottom: 0;  border-radius: 2rem; border: 1px solid rgba(255, 255, 255, 0.12); background: linear-gradient(180deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.02) 100%), rgba(255, 255, 255, 0.08); box-shadow: 0 10px 24px 0 rgba(0, 0, 0, 0.25), 0 2px 6px 0 rgba(0, 0, 0, 0.10) inset; backdrop-filter: blur(6px);}
+  .adjust                                {padding: 0;  position: relative; width: 2.5rem; height: 2.5rem; padding: .5rem; box-sizing: border-box; margin-bottom: 0;  border-radius: 2rem; border: 1px solid rgba(255, 255, 255, 0.12); background: linear-gradient(180deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.02) 100%), rgba(255, 255, 255, 0.08); box-shadow: 0 10px 24px 0 rgba(0, 0, 0, 0.25), 0 2px 6px 0 rgba(0, 0, 0, 0.10) inset; backdrop-filter: blur(6px);}
   .adjust::after                         {content: ''; display: block; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); background-image: url('./images/icon-pencil.svg'); background-repeat: no-repeat; background-position: center center; background-size: 1rem; width: 1rem; height: 1rem;  transition: all .3s ease;}
 
 } 
 
 
 .modal                                            {display: none;}
-.modal.open                                       {display: block; position: absolute; left: 0; right: 0; bottom: 0; top: 0; background-color: rgba(0, 0, 0, 0.6); margin-bottom: 0; display: flex; justify-content: center; align-items: center; gap: 1rem; z-index: 100; background: rgba(0, 0, 0, 0.20);backdrop-filter: blur(40px); padding: 0 1rem;}
+.modal.open                                       {display: block; position: fixed; left: 0; right: 0; bottom: 0; top: 0; background-color: rgba(0, 0, 0, 0.6); margin-bottom: 0; display: flex; justify-content: center; align-items: center; gap: 1rem; z-index: 100; background: rgba(0, 0, 0, 0.20);backdrop-filter: blur(40px); padding: 0 1rem;}
 .modal .modal-content                             { position: relative; color: white; margin-bottom: 0; display: flex; flex-direction: column; gap: 1.5rem; padding: 2.5rem; border-radius: 1rem; border-radius: 2rem; border: 1px solid rgba(255, 255, 255, 0.12); background: linear-gradient(180deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.02) 100%), rgba(255, 255, 255, 0.08); }
 .modal .modal-content .fields                     {display: flex; flex-direction: column; gap: 1rem; justify-content: flex-start; align-items: flex-start;}
 .modal .modal-content .tekst                      {text-align: start;}
